@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Taski</string>
+    <string name="app_tagline">Plan smart. Do more.</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_tasks">Tasks</string>
+    <string name="nav_plan">Today\'s Plan</string>
+    <string name="nav_progress">Progress</string>
+    <string name="nav_profile">Profile</string>
 </resources>
