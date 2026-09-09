@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM tasks ORDER BY priorityScore DESC, deadline ASC")
+    @Query("SELECT * FROM tasks ORDER BY completed ASC, priorityScore DESC, deadline ASC")
     fun observeAllByPriority(): Flow<List<Task>>
 
     @Query("SELECT * FROM tasks WHERE completed = 0 ORDER BY priorityScore DESC, deadline ASC")
