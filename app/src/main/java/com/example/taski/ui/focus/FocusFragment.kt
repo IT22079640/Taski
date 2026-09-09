@@ -13,4 +13,8 @@ class FocusFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_placeholder, container, false)
+
+    companion object {
+        const val ARG_TASK_ID = "taskId"
+    }
 }

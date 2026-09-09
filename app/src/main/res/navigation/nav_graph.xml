@@ -80,7 +80,14 @@
             android:id="@+id/planFragment"
             android:name="com.example.taski.ui.plan.PlanFragment"
             android:label="@string/plan_title"
-            tools:layout="@layout/fragment_plan" />
+            tools:layout="@layout/fragment_plan">
+            <action
+                android:id="@+id/action_plan_to_editor"
+                app:destination="@id/taskEditorFragment" />
+            <action
+                android:id="@+id/action_plan_to_focus"
+                app:destination="@id/focusFragment" />
+        </fragment>
 
         <fragment
             android:id="@+id/progressFragment"
@@ -98,6 +105,11 @@
             android:id="@+id/focusFragment"
             android:name="com.example.taski.ui.focus.FocusFragment"
             android:label="@string/app_name"
-            tools:layout="@layout/fragment_placeholder" />
+            tools:layout="@layout/fragment_placeholder">
+            <argument
+                android:name="taskId"
+                app:argType="long"
+                android:defaultValue="0L" />
+        </fragment>
     </navigation>
 </navigation>
