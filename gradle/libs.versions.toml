@@ -14,6 +14,10 @@ navigation = "2.10.0"
 lifecycle = "2.11.0"
 fragment = "1.9.0"
 recyclerview = "1.4.0"
+robolectric = "4.16.1"
+coroutines = "1.10.2"
+archCore = "2.2.0"
+testCore = "1.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +36,11 @@ androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecy
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCore" }
+androidx-test-core = { group = "androidx.test", name = "core-ktx", version.ref = "testCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
