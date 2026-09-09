@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<MaterialButton>(R.id.btn_quick_add).setOnClickListener {
-            findNavController().navigate(R.id.tasksFragment)
+            findNavController().navigate(R.id.taskEditorFragment)
         }
     }
 }

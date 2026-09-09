@@ -43,7 +43,22 @@
             android:id="@+id/tasksFragment"
             android:name="com.example.taski.ui.tasks.TasksFragment"
             android:label="@string/nav_tasks"
-            tools:layout="@layout/fragment_tasks" />
+            tools:layout="@layout/fragment_tasks">
+            <action
+                android:id="@+id/action_tasks_to_editor"
+                app:destination="@id/taskEditorFragment" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/taskEditorFragment"
+            android:name="com.example.taski.ui.tasks.TaskEditorFragment"
+            android:label="@string/add_task_title"
+            tools:layout="@layout/fragment_task_editor">
+            <argument
+                android:name="taskId"
+                app:argType="long"
+                android:defaultValue="0L" />
+        </fragment>
 
         <fragment
             android:id="@+id/planFragment"

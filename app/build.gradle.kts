@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
 
