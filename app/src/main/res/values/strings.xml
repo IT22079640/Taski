@@ -189,4 +189,15 @@
     <string name="priority_deadline_value">Deadline: %1$s</string>
     <string name="priority_importance_value">Importance: %1$s</string>
     <string name="priority_effort_value">Estimated effort: %1$s</string>
+
+    <string name="notification_channel_name">Task deadline reminders</string>
+    <string name="notification_channel_description">Local reminders for upcoming and overdue Taski deadlines.</string>
+    <string name="notification_upcoming_title">Upcoming: %1$s</string>
+    <string name="notification_upcoming_body">Deadline is %1$s. This is an upcoming reminder.</string>
+    <string name="notification_overdue_title">Overdue: %1$s</string>
+    <string name="notification_overdue_body">This task was due %1$s and is still incomplete.</string>
+    <string name="notification_permission_title">Deadline reminders</string>
+    <string name="notification_permission_body">Taski can send local reminders on this device for upcoming and overdue deadlines. Nothing is sent to the cloud, and you can keep using Taski if you choose not to allow notifications.</string>
+    <string name="notification_permission_allow">Allow</string>
+    <string name="notification_permission_not_now">Not now</string>
 </resources>

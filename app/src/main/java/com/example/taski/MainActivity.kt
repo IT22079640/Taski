@@ -3,14 +3,22 @@ package com.example.taski
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.taski.reminder.NotificationPermissionHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+
+    private var notificationPromptShown = false
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { /* App continues normally whether granted or denied. */ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +35,10 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val showBottomNav = MAIN_DESTINATIONS.contains(destination.id)
             bottomNav.visibility = if (showBottomNav) View.VISIBLE else View.GONE
+            if (showBottomNav && !notificationPromptShown) {
+                notificationPromptShown = true
+                NotificationPermissionHelper.maybePrompt(this, notificationPermissionLauncher)
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->

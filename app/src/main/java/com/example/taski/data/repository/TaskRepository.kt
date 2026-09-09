@@ -5,11 +5,13 @@ import com.example.taski.data.entity.Task
 import com.example.taski.data.entity.TaskWithFocusSessions
 import com.example.taski.priority.PriorityCalculator
 import com.example.taski.priority.PriorityResult
+import com.example.taski.reminder.TaskReminderScheduler
 import kotlinx.coroutines.flow.Flow
 
 class TaskRepository(
     private val taskDao: TaskDao,
-    private val priorityCalculator: PriorityCalculator = PriorityCalculator()
+    private val priorityCalculator: PriorityCalculator = PriorityCalculator(),
+    private val reminderScheduler: TaskReminderScheduler = TaskReminderScheduler.NoOp
 ) {
 
     fun observeAllByPriority(): Flow<List<Task>> = taskDao.observeAllByPriority()
@@ -25,15 +27,34 @@ class TaskRepository(
 
     suspend fun getById(id: Long): Task? = taskDao.getById(id)
 
-    suspend fun insert(task: Task): Long = taskDao.insert(withPriority(task))
+    suspend fun getIncomplete(): List<Task> = taskDao.getIncomplete()
 
-    suspend fun update(task: Task) = taskDao.update(withPriority(task))
+    suspend fun insert(task: Task): Long {
+        val toSave = withPriority(task)
+        val id = taskDao.insert(toSave)
+        reminderScheduler.schedule(toSave.copy(id = id))
+        return id
+    }
 
-    suspend fun delete(task: Task) = taskDao.delete(task)
+    suspend fun update(task: Task) {
+        val toSave = withPriority(task)
+        taskDao.update(toSave)
+        reminderScheduler.schedule(toSave)
+    }
+
+    suspend fun delete(task: Task) {
+        reminderScheduler.cancel(task.id)
+        taskDao.delete(task)
+    }
 
     suspend fun setCompleted(id: Long, completed: Boolean) {
         val completedAt = if (completed) System.currentTimeMillis() else null
         taskDao.setCompleted(id, completed, completedAt)
+        if (completed) {
+            reminderScheduler.cancel(id)
+        } else {
+            taskDao.getById(id)?.let { reminderScheduler.schedule(it) }
+        }
     }
 
     fun observeCompletedCount(): Flow<Int> = taskDao.observeCompletedCount()

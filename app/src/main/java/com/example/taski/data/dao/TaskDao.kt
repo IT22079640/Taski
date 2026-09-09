@@ -21,6 +21,9 @@ interface TaskDao {
     @Query("SELECT * FROM tasks WHERE completed = 1 ORDER BY deadline DESC")
     fun observeCompleted(): Flow<List<Task>>
 
+    @Query("SELECT * FROM tasks WHERE completed = 0")
+    suspend fun getIncomplete(): List<Task>
+
     @Query("SELECT * FROM tasks WHERE id = :id")
     fun observeById(id: Long): Flow<Task?>
 
