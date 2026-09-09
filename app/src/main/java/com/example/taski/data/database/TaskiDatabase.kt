@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.taski.data.dao.FocusSessionDao
 import com.example.taski.data.dao.TaskDao
 import com.example.taski.data.entity.FocusSession
@@ -12,7 +14,7 @@ import com.example.taski.data.entity.Task
 
 @Database(
     entities = [Task::class, FocusSession::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -23,6 +25,12 @@ abstract class TaskiDatabase : RoomDatabase() {
     companion object {
         private const val DATABASE_NAME = "taski.db"
 
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE tasks ADD COLUMN completedAt INTEGER")
+            }
+        }
+
         @Volatile
         private var INSTANCE: TaskiDatabase? = null
 
@@ -32,7 +40,10 @@ abstract class TaskiDatabase : RoomDatabase() {
                     context.applicationContext,
                     TaskiDatabase::class.java,
                     DATABASE_NAME
-                ).build().also { INSTANCE = it }
+                )
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
+                    .also { INSTANCE = it }
             }
         }
     }

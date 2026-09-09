@@ -26,4 +26,5 @@
     <dimen name="text_display">32sp</dimen>
     <dimen name="text_timer">48sp</dimen>
     <dimen name="focus_timer_ring">168dp</dimen>
+    <dimen name="text_stat">28sp</dimen>
 </resources>

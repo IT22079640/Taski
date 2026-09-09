@@ -74,7 +74,8 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
             category = trimmedCategory,
             priorityScore = current?.priorityScore ?: 0,
             completed = current?.completed ?: false,
-            createdAt = current?.createdAt ?: System.currentTimeMillis()
+            createdAt = current?.createdAt ?: System.currentTimeMillis(),
+            completedAt = current?.completedAt
         )
 
         viewModelScope.launch {

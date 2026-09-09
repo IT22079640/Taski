@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.taski.data.entity.FocusSession
+import com.example.taski.data.entity.FocusSessionWithTask
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -35,4 +36,27 @@ interface FocusSessionDao {
         "SELECT COALESCE(SUM(duration), 0) FROM focus_sessions WHERE taskId = :taskId AND completed = 1"
     )
     fun observeTotalDurationForTask(taskId: Long): Flow<Long>
+
+    @Query("SELECT COALESCE(SUM(duration), 0) FROM focus_sessions")
+    fun observeTotalSavedDuration(): Flow<Long>
+
+    @Query(
+        "SELECT COALESCE(SUM(duration), 0) FROM focus_sessions " +
+            "WHERE startTime >= :startInclusive AND startTime < :endExclusive"
+    )
+    fun observeSavedDurationBetween(startInclusive: Long, endExclusive: Long): Flow<Long>
+
+    @Query("SELECT COUNT(*) FROM focus_sessions WHERE completed = 1")
+    fun observeCompletedSessionCount(): Flow<Int>
+
+    @Query("SELECT * FROM focus_sessions ORDER BY startTime DESC LIMIT :limit")
+    fun observeRecent(limit: Int): Flow<List<FocusSession>>
+
+    @Query(
+        "SELECT focus_sessions.id, focus_sessions.taskId, focus_sessions.duration, " +
+            "focus_sessions.startTime, focus_sessions.completed, tasks.title AS taskTitle " +
+            "FROM focus_sessions INNER JOIN tasks ON tasks.id = focus_sessions.taskId " +
+            "ORDER BY focus_sessions.startTime DESC LIMIT :limit"
+    )
+    fun observeRecentWithTask(limit: Int): Flow<List<FocusSessionWithTask>>
 }

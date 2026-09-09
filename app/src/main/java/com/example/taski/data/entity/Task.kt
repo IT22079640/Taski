@@ -15,5 +15,6 @@ data class Task(
     val category: String,
     val priorityScore: Int = 0,
     val completed: Boolean = false,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val completedAt: Long? = null
 )

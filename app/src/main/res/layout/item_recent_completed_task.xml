@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/spacing_sm"
+    android:paddingBottom="@dimen/spacing_sm">
+
+    <TextView
+        android:id="@+id/text_title"
+        style="@style/TextAppearance.Taski.Subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Finish SE4041 lab report" />
+
+    <TextView
+        android:id="@+id/text_meta"
+        style="@style/TextAppearance.Taski.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xs"
+        tools:text="Completed 9 Sep 2026" />
+</LinearLayout>

@@ -40,6 +40,27 @@ interface TaskDao {
     @Delete
     suspend fun delete(task: Task)
 
-    @Query("UPDATE tasks SET completed = :completed WHERE id = :id")
-    suspend fun setCompleted(id: Long, completed: Boolean)
+    @Query("UPDATE tasks SET completed = :completed, completedAt = :completedAt WHERE id = :id")
+    suspend fun setCompleted(id: Long, completed: Boolean, completedAt: Long?)
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE completed = 1")
+    fun observeCompletedCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE completed = 0")
+    fun observePendingCount(): Flow<Int>
+
+    @Query(
+        "SELECT COUNT(*) FROM tasks WHERE completed = 1 AND completedAt IS NOT NULL " +
+            "AND completedAt >= :startInclusive AND completedAt < :endExclusive"
+    )
+    fun observeCompletedCountBetween(startInclusive: Long, endExclusive: Long): Flow<Int>
+
+    @Query(
+        "SELECT * FROM tasks WHERE completed = 1 AND completedAt IS NOT NULL " +
+            "ORDER BY completedAt DESC LIMIT :limit"
+    )
+    fun observeRecentCompleted(limit: Int): Flow<List<Task>>
+
+    @Query("SELECT completedAt FROM tasks WHERE completed = 1 AND completedAt IS NOT NULL")
+    fun observeCompletedAtTimes(): Flow<List<Long>>
 }

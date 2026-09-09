@@ -31,7 +31,22 @@ class TaskRepository(
 
     suspend fun delete(task: Task) = taskDao.delete(task)
 
-    suspend fun setCompleted(id: Long, completed: Boolean) = taskDao.setCompleted(id, completed)
+    suspend fun setCompleted(id: Long, completed: Boolean) {
+        val completedAt = if (completed) System.currentTimeMillis() else null
+        taskDao.setCompleted(id, completed, completedAt)
+    }
+
+    fun observeCompletedCount(): Flow<Int> = taskDao.observeCompletedCount()
+
+    fun observePendingCount(): Flow<Int> = taskDao.observePendingCount()
+
+    fun observeCompletedCountBetween(startInclusive: Long, endExclusive: Long): Flow<Int> =
+        taskDao.observeCompletedCountBetween(startInclusive, endExclusive)
+
+    fun observeRecentCompleted(limit: Int): Flow<List<Task>> =
+        taskDao.observeRecentCompleted(limit)
+
+    fun observeCompletedAtTimes(): Flow<List<Long>> = taskDao.observeCompletedAtTimes()
 
     fun explainPriority(task: Task): PriorityResult = priorityCalculator.calculate(task)
 
