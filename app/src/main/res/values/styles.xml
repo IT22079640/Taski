@@ -51,6 +51,14 @@
         <item name="android:textColor">@color/text_secondary</item>
     </style>
 
+    <style name="TextAppearance.Taski.Timer" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">@dimen/text_timer</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
     <style name="Widget.Taski.BottomNav" parent="Widget.Material3.BottomNavigationView">
         <item name="backgroundTint">@color/white</item>
         <item name="itemIconTint">@color/bottom_nav_color</item>

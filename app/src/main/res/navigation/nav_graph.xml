@@ -104,8 +104,8 @@
         <fragment
             android:id="@+id/focusFragment"
             android:name="com.example.taski.ui.focus.FocusFragment"
-            android:label="@string/app_name"
-            tools:layout="@layout/fragment_placeholder">
+            android:label="@string/focus_title"
+            tools:layout="@layout/fragment_focus">
             <argument
                 android:name="taskId"
                 app:argType="long"

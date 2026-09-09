@@ -21,6 +21,7 @@ data class FocusSession(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val taskId: Long,
+    /** Session length in milliseconds. */
     val duration: Long,
     val startTime: Long,
     val completed: Boolean = false
