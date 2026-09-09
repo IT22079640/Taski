@@ -12,5 +12,5 @@ class ProgressFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_placeholder, container, false)
+    ): View = inflater.inflate(R.layout.fragment_progress, container, false)
 }

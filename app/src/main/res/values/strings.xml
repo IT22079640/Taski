@@ -4,7 +4,52 @@
 
     <string name="nav_home">Home</string>
     <string name="nav_tasks">Tasks</string>
-    <string name="nav_plan">Today\'s Plan</string>
+    <string name="nav_plan">Plan</string>
     <string name="nav_progress">Progress</string>
     <string name="nav_profile">Profile</string>
+
+    <string name="onboarding_title">Welcome to Taski</string>
+    <string name="onboarding_subtitle">A simple way to plan your day, focus on what matters, and keep your progress in one place.</string>
+    <string name="onboarding_feature_organize_title">Organize tasks</string>
+    <string name="onboarding_feature_organize_body">Capture assignments, deadlines, and personal work in one list.</string>
+    <string name="onboarding_feature_priority_title">Prioritize important work</string>
+    <string name="onboarding_feature_priority_body">Taski ranks tasks with a clear rule-based priority score.</string>
+    <string name="onboarding_feature_focus_title">Focus with a timer</string>
+    <string name="onboarding_feature_focus_body">Use a task-specific Pomodoro timer when you are ready to work.</string>
+    <string name="onboarding_feature_progress_title">Track your progress</string>
+    <string name="onboarding_feature_progress_body">See completions, focus time, and your daily streak as you go.</string>
+    <string name="onboarding_get_started">Get Started</string>
+
+    <string name="home_greeting">Welcome to Taski</string>
+    <string name="home_message">Start by adding a task to plan your day.</string>
+    <string name="home_priorities_title">Today\'s priorities</string>
+    <string name="home_plan_title">Today\'s focus plan</string>
+    <string name="home_progress_title">Focus and progress</string>
+    <string name="home_quick_add">Quick Add Task</string>
+
+    <string name="tasks_title">Tasks</string>
+    <string name="tasks_empty_title">No tasks yet</string>
+    <string name="tasks_empty_body">Add a task to start organizing your work.</string>
+    <string name="tasks_add">Add task</string>
+
+    <string name="plan_title">Today\'s Focus Plan</string>
+    <string name="plan_empty_title">No plan yet</string>
+    <string name="plan_empty_body">Your focus plan will appear here after you add tasks.</string>
+
+    <string name="progress_title">Progress</string>
+    <string name="progress_empty_title">No progress yet</string>
+    <string name="progress_empty_body">Completions, focus time, and streaks will show here once you start working.</string>
+    <string name="progress_completions_label">Completed tasks</string>
+    <string name="progress_focus_label">Focus time</string>
+    <string name="progress_streak_label">Daily streak</string>
+    <string name="progress_no_data">No data yet</string>
+
+    <string name="profile_settings_title">Settings</string>
+    <string name="profile_settings_placeholder">Preferences will appear here in a later update.</string>
+    <string name="profile_about_title">About Taski</string>
+    <string name="profile_about_body">Taski is an offline productivity app for university students and young professionals. Plan tasks, focus locally, and track progress — no account required.</string>
+
+    <string name="empty_no_tasks">No tasks yet</string>
+    <string name="cd_taski_logo">Taski logo</string>
+    <string name="cd_add_task">Add task</string>
 </resources>
