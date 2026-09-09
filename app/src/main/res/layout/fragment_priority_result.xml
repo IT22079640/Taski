@@ -10,13 +10,12 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/priority_toolbar"
+        style="@style/Widget.Taski.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background"
         app:navigationContentDescription="@string/cd_back"
         app:navigationIcon="@drawable/ic_back"
-        app:title="@string/priority_result_title"
-        app:titleTextColor="@color/text_primary" />
+        app:title="@string/priority_result_title" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -100,8 +99,9 @@
                             tools:text="Finish SE4041 lab report" />
 
                         <FrameLayout
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
+                            android:id="@+id/score_circle"
+                            android:layout_width="@dimen/score_circle_size"
+                            android:layout_height="@dimen/score_circle_size"
                             android:layout_marginTop="@dimen/spacing_xl"
                             android:background="@drawable/bg_score_circle">
 
@@ -221,7 +221,7 @@
                             android:layout_marginTop="@dimen/spacing_sm"
                             app:indicatorColor="@color/primary"
                             app:trackColor="@color/outline"
-                            app:trackCornerRadius="6dp" />
+                            app:trackCornerRadius="@dimen/progress_track_radius" />
 
                         <TextView
                             android:id="@+id/value_urgency"
@@ -247,7 +247,7 @@
                             android:layout_marginTop="@dimen/spacing_sm"
                             app:indicatorColor="@color/primary"
                             app:trackColor="@color/outline"
-                            app:trackCornerRadius="6dp" />
+                            app:trackCornerRadius="@dimen/progress_track_radius" />
 
                         <TextView
                             android:id="@+id/value_importance"
@@ -273,7 +273,7 @@
                             android:layout_marginTop="@dimen/spacing_sm"
                             app:indicatorColor="@color/accent"
                             app:trackColor="@color/outline"
-                            app:trackCornerRadius="6dp" />
+                            app:trackCornerRadius="@dimen/progress_track_radius" />
 
                         <TextView
                             android:id="@+id/value_effort"
@@ -320,6 +320,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height"
         android:layout_margin="@dimen/screen_padding"
+        android:minHeight="@dimen/button_height"
         android:text="@string/priority_continue" />
 
 </LinearLayout>

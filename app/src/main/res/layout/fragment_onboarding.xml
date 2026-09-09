@@ -56,8 +56,8 @@
                     android:background="@drawable/bg_icon_soft">
 
                     <ImageView
-                        android:layout_width="@dimen/spacing_xl"
-                        android:layout_height="@dimen/spacing_xl"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
                         android:layout_gravity="center"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_feature_organize" />
@@ -98,8 +98,8 @@
                     android:background="@drawable/bg_icon_soft">
 
                     <ImageView
-                        android:layout_width="@dimen/spacing_xl"
-                        android:layout_height="@dimen/spacing_xl"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
                         android:layout_gravity="center"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_feature_priority" />
@@ -140,8 +140,8 @@
                     android:background="@drawable/bg_icon_soft">
 
                     <ImageView
-                        android:layout_width="@dimen/spacing_xl"
-                        android:layout_height="@dimen/spacing_xl"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
                         android:layout_gravity="center"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_feature_focus" />
@@ -182,8 +182,8 @@
                     android:background="@drawable/bg_icon_soft">
 
                     <ImageView
-                        android:layout_width="@dimen/spacing_xl"
-                        android:layout_height="@dimen/spacing_xl"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
                         android:layout_gravity="center"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_feature_progress" />
@@ -219,6 +219,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height"
         android:layout_marginTop="@dimen/spacing_lg"
+        android:minHeight="@dimen/button_height"
         android:text="@string/onboarding_get_started" />
 
 </LinearLayout>

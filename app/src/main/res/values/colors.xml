@@ -7,11 +7,16 @@
     <color name="primary">#4F46E5</color>
     <color name="accent">#22C55E</color>
     <color name="primary_soft">#EEF2FF</color>
+    <color name="accent_soft">#DCFCE7</color>
 
     <color name="text_primary">#111827</color>
     <color name="text_secondary">#6B7280</color>
+    <color name="text_on_primary">#FFFFFFFF</color>
+    <color name="card_background">#FFFFFFFF</color>
+    <color name="divider">#E5E7EB</color>
     <color name="outline">#E5E7EB</color>
     <color name="nav_unselected">#9CA3AF</color>
+    <color name="completed_text">#9CA3AF</color>
 
     <color name="priority_high">#EF4444</color>
     <color name="priority_medium">#F97316</color>

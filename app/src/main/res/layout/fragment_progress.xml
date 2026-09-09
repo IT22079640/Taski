@@ -26,15 +26,32 @@
             android:id="@+id/progress_empty_intro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_sm"
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
             android:visibility="gone"
             tools:visibility="visible">
+
+            <FrameLayout
+                android:layout_width="@dimen/empty_icon_container"
+                android:layout_height="@dimen/empty_icon_container"
+                android:background="@drawable/bg_icon_soft">
+
+                <ImageView
+                    android:layout_width="@dimen/empty_icon_size"
+                    android:layout_height="@dimen/empty_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/cd_empty_progress"
+                    android:src="@drawable/ic_nav_progress"
+                    app:tint="@color/primary" />
+            </FrameLayout>
 
             <TextView
                 style="@style/TextAppearance.Taski.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:gravity="center"
                 android:text="@string/progress_empty_title" />
 
             <TextView
@@ -42,6 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xs"
+                android:gravity="center"
                 android:text="@string/progress_empty_body" />
         </LinearLayout>
 
@@ -56,9 +74,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    style="@style/TextAppearance.Taski.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/progress_overview_title" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
                     android:baselineAligned="false"
                     android:orientation="horizontal">
 
@@ -160,6 +185,25 @@
                             android:text="@string/progress_sessions_label" />
                     </LinearLayout>
                 </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Taski.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.Taski.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/progress_today_title" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -202,6 +246,7 @@
                             style="@style/TextAppearance.Taski.Stat"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/accent"
                             tools:text="25 min" />
 
                         <TextView

@@ -22,10 +22,21 @@
 
     <string name="home_greeting">Welcome to Taski</string>
     <string name="home_message">Start by adding a task to plan your day.</string>
+    <string name="home_status_pending">%1$d pending · %2$d completed today</string>
+    <string name="home_status_caught_up">You\'re caught up. Great work today.</string>
     <string name="home_priorities_title">Today\'s priorities</string>
+    <string name="home_priorities_empty">No pending tasks yet. Add one to see it ranked here.</string>
+    <string name="home_view_all_tasks">View all tasks</string>
     <string name="home_plan_title">Today\'s focus plan</string>
+    <string name="home_plan_ready">%1$d planned · %2$s</string>
+    <string name="home_plan_empty">Build a focus plan from your highest-priority tasks.</string>
+    <string name="home_open_plan">Open today\'s plan</string>
     <string name="home_progress_title">Focus and progress</string>
+    <string name="home_progress_summary">Streak %1$s · Focus today %2$s</string>
+    <string name="home_view_progress">View progress</string>
     <string name="home_quick_add">Quick Add Task</string>
+    <string name="home_priority_meta">%1$s · %2$s · Score %3$d</string>
+    <string name="cd_home_open_task">Open task %1$s</string>
 
     <string name="tasks_title">Tasks</string>
     <string name="tasks_empty_title">No tasks yet</string>
@@ -34,11 +45,19 @@
     <string name="add_task_title">Add Task</string>
     <string name="edit_task_title">Edit Task</string>
     <string name="task_title">Title</string>
+    <string name="task_title_required">Title (required)</string>
     <string name="task_description">Description</string>
+    <string name="task_description_optional">Optional notes for this task</string>
     <string name="task_deadline">Deadline</string>
+    <string name="task_deadline_required">Deadline (required)</string>
     <string name="task_effort">Estimated effort (hours)</string>
+    <string name="task_effort_required">Estimated effort in hours (required)</string>
     <string name="task_importance">Importance</string>
+    <string name="task_importance_required">Importance (required)</string>
     <string name="task_category">Category</string>
+    <string name="task_category_required">Category (required)</string>
+    <string name="task_score">Score %1$d</string>
+    <string name="task_completed_label">Completed</string>
     <string name="task_save">Save Task</string>
     <string name="task_save_changes">Save Changes</string>
     <string name="task_complete">Mark complete</string>
@@ -119,6 +138,8 @@
     <string name="cd_focus_timer">Focus countdown</string>
 
     <string name="progress_title">Progress</string>
+    <string name="progress_overview_title">Overview</string>
+    <string name="progress_today_title">Today</string>
     <string name="progress_empty_title">No progress yet</string>
     <string name="progress_empty_body">Completions, focus time, and streaks will show here once you start working.</string>
     <string name="progress_completions_label">Completed tasks</string>
@@ -156,17 +177,25 @@
     <string name="cd_progress_today_focus">Focus time today %1$s</string>
     <string name="cd_progress_streak">%1$s streak</string>
 
-    <string name="profile_settings_title">Settings</string>
-    <string name="profile_settings_placeholder">Preferences will appear here in a later update.</string>
+    <string name="profile_settings_title">On this device</string>
+    <string name="profile_offline_title">Offline storage</string>
+    <string name="profile_offline_body">Tasks, focus sessions, and progress stay on this phone. Taski does not use an account or cloud sync.</string>
+    <string name="profile_reminders_title">Deadline reminders</string>
+    <string name="profile_reminders_body">Upcoming and overdue reminders are scheduled locally. You can keep using Taski if notifications are turned off.</string>
     <string name="profile_about_title">About Taski</string>
     <string name="profile_about_body">Taski is an offline productivity app for university students and young professionals. Plan tasks, focus locally, and track progress — no account required.</string>
 
     <string name="empty_no_tasks">No tasks yet</string>
     <string name="cd_taski_logo">Taski logo</string>
     <string name="cd_add_task">Add task</string>
+    <string name="cd_empty_tasks">No tasks yet</string>
+    <string name="cd_empty_plan">No planned tasks</string>
+    <string name="cd_empty_progress">No progress yet</string>
 
     <string name="priority_result_title">AI Priority Result</string>
     <string name="priority_score_label">Priority score</string>
+    <string name="cd_priority_score">Priority score %1$d out of 100, %2$s priority</string>
+    <string name="cd_priority_factor">%1$s weighted %2$s, score %3$d out of 100</string>
     <string name="priority_score_out_of">%1$d / 100</string>
     <string name="priority_level_high">High</string>
     <string name="priority_level_medium">Medium</string>

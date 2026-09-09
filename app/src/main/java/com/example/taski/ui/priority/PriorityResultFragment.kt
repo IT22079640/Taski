@@ -79,6 +79,10 @@ class PriorityResultFragment : Fragment() {
         val levelView = view.findViewById<TextView>(R.id.text_priority_level)
         levelView.text = levelLabel(level)
         levelView.setTextColor(ContextCompat.getColor(requireContext(), levelColor(level)))
+        view.findViewById<View>(R.id.score_circle).contentDescription =
+            getString(R.string.cd_priority_score, score, levelLabel(level))
+        view.findViewById<TextView>(R.id.text_score).importantForAccessibility =
+            View.IMPORTANT_FOR_ACCESSIBILITY_NO
 
         view.findViewById<TextView>(R.id.label_urgency).text =
             getString(R.string.priority_factor_urgency) + " · " + getString(R.string.priority_factor_weight_urgency)
@@ -87,9 +91,33 @@ class PriorityResultFragment : Fragment() {
         view.findViewById<TextView>(R.id.label_effort_factor).text =
             getString(R.string.priority_factor_effort) + " · " + getString(R.string.priority_factor_weight_effort)
 
-        bindFactor(view, R.id.bar_urgency, R.id.value_urgency, priority.urgencyScore)
-        bindFactor(view, R.id.bar_importance, R.id.value_importance, priority.importanceScore)
-        bindFactor(view, R.id.bar_effort, R.id.value_effort, priority.effortScore)
+        bindFactor(
+            view,
+            R.id.bar_urgency,
+            R.id.value_urgency,
+            R.id.label_urgency,
+            getString(R.string.priority_factor_urgency),
+            getString(R.string.priority_factor_weight_urgency),
+            priority.urgencyScore
+        )
+        bindFactor(
+            view,
+            R.id.bar_importance,
+            R.id.value_importance,
+            R.id.label_importance_factor,
+            getString(R.string.priority_factor_importance),
+            getString(R.string.priority_factor_weight_importance),
+            priority.importanceScore
+        )
+        bindFactor(
+            view,
+            R.id.bar_effort,
+            R.id.value_effort,
+            R.id.label_effort_factor,
+            getString(R.string.priority_factor_effort),
+            getString(R.string.priority_factor_weight_effort),
+            priority.effortScore
+        )
 
         val reasonsContainer = view.findViewById<LinearLayout>(R.id.container_reasons)
         reasonsContainer.removeAllViews()
@@ -107,12 +135,23 @@ class PriorityResultFragment : Fragment() {
         }
     }
 
-    private fun bindFactor(view: View, barId: Int, valueId: Int, score: Int) {
+    private fun bindFactor(
+        view: View,
+        barId: Int,
+        valueId: Int,
+        labelId: Int,
+        name: String,
+        weight: String,
+        score: Int
+    ) {
         view.findViewById<LinearProgressIndicator>(barId).apply {
             max = 100
             setProgressCompat(score, false)
+            contentDescription = getString(R.string.cd_priority_factor, name, weight, score)
         }
         view.findViewById<TextView>(valueId).text = getString(R.string.priority_factor_value, score)
+        view.findViewById<TextView>(labelId).contentDescription =
+            getString(R.string.cd_priority_factor, name, weight, score)
     }
 
     private fun continueToTasks() {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#0F172A</color>
+    <color name="primary_soft">#312E81</color>
+    <color name="accent_soft">#14532D</color>
+
+    <color name="text_primary">#F9FAFB</color>
+    <color name="text_secondary">#9CA3AF</color>
+    <color name="card_background">#1E293B</color>
+    <color name="divider">#334155</color>
+    <color name="outline">#334155</color>
+    <color name="nav_unselected">#94A3B8</color>
+    <color name="completed_text">#94A3B8</color>
+</resources>

@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/spacing_sm"
                 android:layout_weight="1"
+                android:maxLines="3"
                 tools:text="Finish SE4041 lab report" />
 
             <TextView
@@ -86,14 +87,13 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_open"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.Taski.Button.Outlined"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/spacing_sm"
                 android:layout_weight="1"
-                android:minHeight="48dp"
-                android:text="@string/plan_open_task"
-                android:textAllCaps="false" />
+                android:minHeight="@dimen/touch_target_min"
+                android:text="@string/plan_open_task" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_start_focus"
@@ -101,7 +101,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:minHeight="48dp"
+                android:minHeight="@dimen/touch_target_min"
                 android:text="@string/plan_start_focus" />
         </LinearLayout>
     </LinearLayout>

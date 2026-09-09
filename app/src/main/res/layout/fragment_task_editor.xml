@@ -10,18 +10,18 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/editor_toolbar"
+        style="@style/Widget.Taski.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background"
         app:navigationContentDescription="@string/cd_back"
         app:navigationIcon="@drawable/ic_back"
-        app:title="@string/add_task_title"
-        app:titleTextColor="@color/text_primary" />
+        app:title="@string/add_task_title" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:clipToPadding="false"
         android:fillViewport="true"
         android:paddingStart="@dimen/screen_padding"
         android:paddingEnd="@dimen/screen_padding">
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/spacing_lg">
+            android:paddingBottom="@dimen/spacing_xxl">
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.Taski.Card"
@@ -44,26 +44,28 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_title"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.Taski.TextInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/task_title">
+                        android:hint="@string/task_title_required">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/input_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
                             android:inputType="textCapSentences"
                             android:maxLines="2" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_description"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.Taski.TextInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_md"
-                        android:hint="@string/task_description">
+                        android:hint="@string/task_description"
+                        app:helperText="@string/task_description_optional">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/input_description"
@@ -76,11 +78,12 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_deadline"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.Taski.TextInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_md"
-                        android:hint="@string/task_deadline"
+                        android:hint="@string/task_deadline_required"
+                        app:endIconContentDescription="@string/task_deadline"
                         app:endIconDrawable="@drawable/ic_calendar"
                         app:endIconMode="custom">
 
@@ -90,52 +93,56 @@
                             android:layout_height="wrap_content"
                             android:clickable="true"
                             android:focusable="false"
-                            android:inputType="none" />
+                            android:inputType="none"
+                            android:minHeight="@dimen/touch_target_min" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_effort"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.Taski.TextInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_md"
-                        android:hint="@string/task_effort">
+                        android:hint="@string/task_effort_required">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/input_effort"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
                             android:inputType="numberDecimal" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_importance"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.Taski.TextInput.ExposedDropdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_md"
-                        android:hint="@string/task_importance">
+                        android:hint="@string/task_importance_required">
 
                         <AutoCompleteTextView
                             android:id="@+id/input_importance"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none" />
+                            android:inputType="none"
+                            android:minHeight="@dimen/touch_target_min" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_category"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.Taski.TextInput.ExposedDropdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_md"
-                        android:hint="@string/task_category">
+                        android:hint="@string/task_category_required">
 
                         <AutoCompleteTextView
                             android:id="@+id/input_category"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textCapWords" />
+                            android:inputType="textCapWords"
+                            android:minHeight="@dimen/touch_target_min" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -146,8 +153,9 @@
         android:id="@+id/btn_save_task"
         style="@style/Widget.Taski.Button"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/screen_padding"
+        android:minHeight="@dimen/button_height"
         android:text="@string/task_save" />
 
 </LinearLayout>

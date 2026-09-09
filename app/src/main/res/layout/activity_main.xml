@@ -25,6 +25,7 @@
         style="@style/Widget.Taski.BottomNav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/touch_target_min"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

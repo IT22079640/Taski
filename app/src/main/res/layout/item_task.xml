@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_md"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,7 +18,10 @@
             android:id="@+id/checkbox_complete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="@dimen/touch_target_min"
+            android:minHeight="@dimen/touch_target_min"
             android:contentDescription="@string/task_complete"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_sm"
             android:layout_marginEnd="@dimen/spacing_sm"
+            android:maxLines="3"
             app:layout_constraintEnd_toStartOf="@id/button_delete"
             app:layout_constraintStart_toEndOf="@id/checkbox_complete"
             app:layout_constraintTop_toTopOf="parent"
@@ -56,13 +61,31 @@
             tools:text="High"
             tools:textColor="@color/priority_high" />
 
+        <TextView
+            android:id="@+id/text_score"
+            style="@style/TextAppearance.Taski.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:background="@drawable/bg_priority_chip"
+            android:paddingStart="@dimen/spacing_md"
+            android:paddingTop="@dimen/spacing_xs"
+            android:paddingEnd="@dimen/spacing_md"
+            android:paddingBottom="@dimen/spacing_xs"
+            android:textColor="@color/primary"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/text_importance"
+            app:layout_constraintStart_toEndOf="@id/text_importance"
+            app:layout_constraintTop_toTopOf="@id/text_importance"
+            tools:text="Score 86" />
+
         <ImageButton
             android:id="@+id/button_delete"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/icon_button_size"
+            android:layout_height="@dimen/icon_button_size"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_delete_task"
-            android:padding="@dimen/spacing_sm"
+            android:padding="@dimen/spacing_md"
             android:src="@drawable/ic_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

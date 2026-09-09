@@ -49,7 +49,7 @@
 
                     <TextView
                         android:id="@+id/text_summary_tasks"
-                        style="@style/TextAppearance.Taski.Subtitle"
+                        style="@style/TextAppearance.Taski.Stat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -75,7 +75,7 @@
 
                     <TextView
                         android:id="@+id/text_summary_planned"
-                        style="@style/TextAppearance.Taski.Subtitle"
+                        style="@style/TextAppearance.Taski.Stat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -101,7 +101,7 @@
 
                     <TextView
                         android:id="@+id/text_summary_available"
-                        style="@style/TextAppearance.Taski.Subtitle"
+                        style="@style/TextAppearance.Taski.Stat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -125,6 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_md"
                 android:text="@string/plan_overflow_note"
+                android:textColor="@color/priority_medium"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>
@@ -163,35 +164,35 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_time_1h"
-                    style="@style/Widget.Material3.Chip.Filter"
+                    style="@style/Widget.Taski.Chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/chip_min_height"
                     android:text="@string/plan_time_1h" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_time_2h"
-                    style="@style/Widget.Material3.Chip.Filter"
+                    style="@style/Widget.Taski.Chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/chip_min_height"
                     android:text="@string/plan_time_2h" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_time_4h"
-                    style="@style/Widget.Material3.Chip.Filter"
+                    style="@style/Widget.Taski.Chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/chip_min_height"
                     android:text="@string/plan_time_4h" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_time_custom"
-                    style="@style/Widget.Material3.Chip.Filter"
+                    style="@style/Widget.Taski.Chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/chip_min_height"
                     android:text="@string/plan_time_custom" />
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
@@ -203,7 +204,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/spacing_lg"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/spacing_sm"
+        android:paddingBottom="@dimen/spacing_lg"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -225,10 +226,25 @@
         app:layout_constraintTop_toBottomOf="@id/card_available_time"
         tools:visibility="visible">
 
+        <FrameLayout
+            android:layout_width="@dimen/empty_icon_container"
+            android:layout_height="@dimen/empty_icon_container"
+            android:background="@drawable/bg_icon_soft">
+
+            <ImageView
+                android:layout_width="@dimen/empty_icon_size"
+                android:layout_height="@dimen/empty_icon_size"
+                android:layout_gravity="center"
+                android:contentDescription="@string/cd_empty_plan"
+                android:src="@drawable/ic_nav_plan"
+                app:tint="@color/primary" />
+        </FrameLayout>
+
         <TextView
             style="@style/TextAppearance.Taski.Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_lg"
             android:gravity="center"
             android:text="@string/plan_caught_up_title" />
 
