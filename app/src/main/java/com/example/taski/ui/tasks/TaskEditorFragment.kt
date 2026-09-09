@@ -9,8 +9,10 @@ import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.example.taski.R
 import com.example.taski.data.entity.Task
+import com.example.taski.ui.priority.PriorityResultFragment
 import com.example.taski.utils.DateUtils
 import com.example.taski.utils.ImportanceLabels
 import com.example.taski.viewmodel.TaskEditorViewModel
@@ -102,10 +104,19 @@ class TaskEditorFragment : Fragment() {
             layoutCategory.error = errors.category
         }
 
-        viewModel.saveComplete.observe(viewLifecycleOwner) { complete ->
-            if (complete) {
+        viewModel.savedTaskId.observe(viewLifecycleOwner) { savedId ->
+            if (savedId != null && savedId > 0L) {
                 viewModel.onSaveHandled()
-                findNavController().popBackStack()
+                val args = Bundle().apply {
+                    putLong(PriorityResultFragment.ARG_TASK_ID, savedId)
+                }
+                findNavController().navigate(
+                    R.id.priorityResultFragment,
+                    args,
+                    navOptions {
+                        popUpTo(R.id.taskEditorFragment) { inclusive = true }
+                    }
+                )
             }
         }
 

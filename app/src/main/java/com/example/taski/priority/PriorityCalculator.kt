@@ -50,7 +50,10 @@ class PriorityCalculator {
                 urgencyReason(daysUntilDeadline),
                 importanceReason(importance),
                 effortReason(estimatedEffortMinutes)
-            )
+            ),
+            urgencyScore = urgency,
+            importanceScore = importanceScore,
+            effortScore = effort
         )
     }
 

@@ -58,6 +58,22 @@
                 android:name="taskId"
                 app:argType="long"
                 android:defaultValue="0L" />
+            <action
+                android:id="@+id/action_editor_to_priority_result"
+                app:destination="@id/priorityResultFragment"
+                app:popUpTo="@id/taskEditorFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/priorityResultFragment"
+            android:name="com.example.taski.ui.priority.PriorityResultFragment"
+            android:label="@string/priority_result_title"
+            tools:layout="@layout/fragment_priority_result">
+            <argument
+                android:name="taskId"
+                app:argType="long"
+                android:defaultValue="0L" />
         </fragment>
 
         <fragment

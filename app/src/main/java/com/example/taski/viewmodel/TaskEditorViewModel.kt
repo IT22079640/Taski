@@ -20,8 +20,8 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
     private val _formErrors = MutableLiveData<FormErrors>()
     val formErrors: LiveData<FormErrors> = _formErrors
 
-    private val _saveComplete = MutableLiveData(false)
-    val saveComplete: LiveData<Boolean> = _saveComplete
+    private val _savedTaskId = MutableLiveData<Long?>()
+    val savedTaskId: LiveData<Long?> = _savedTaskId
 
     fun load(taskId: Long) {
         if (taskId <= 0L) {
@@ -78,17 +78,18 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
         )
 
         viewModelScope.launch {
-            if (current == null) {
+            val savedId = if (current == null) {
                 repository.insert(task)
             } else {
                 repository.update(task)
+                current.id
             }
-            _saveComplete.value = true
+            _savedTaskId.value = savedId
         }
     }
 
     fun onSaveHandled() {
-        _saveComplete.value = false
+        _savedTaskId.value = null
     }
 
     data class FormErrors(

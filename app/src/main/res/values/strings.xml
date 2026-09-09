@@ -74,4 +74,29 @@
     <string name="empty_no_tasks">No tasks yet</string>
     <string name="cd_taski_logo">Taski logo</string>
     <string name="cd_add_task">Add task</string>
+
+    <string name="priority_result_title">AI Priority Result</string>
+    <string name="priority_score_label">Priority score</string>
+    <string name="priority_score_out_of">%1$d / 100</string>
+    <string name="priority_level_high">High</string>
+    <string name="priority_level_medium">Medium</string>
+    <string name="priority_level_low">Low</string>
+    <string name="priority_task_details">Task details</string>
+    <string name="priority_factors_title">How this score was calculated</string>
+    <string name="priority_factor_urgency">Urgency</string>
+    <string name="priority_factor_importance">Importance</string>
+    <string name="priority_factor_effort">Effort</string>
+    <string name="priority_factor_weight_urgency">40%</string>
+    <string name="priority_factor_weight_importance">40%</string>
+    <string name="priority_factor_weight_effort">20%</string>
+    <string name="priority_factor_value">%1$d / 100</string>
+    <string name="priority_reasons_title">Why this ranking</string>
+    <string name="priority_reason_item">• %1$s</string>
+    <string name="priority_continue">Continue to Tasks</string>
+    <string name="priority_not_found_title">Task not found</string>
+    <string name="priority_not_found_body">This task could not be loaded. It may have been deleted.</string>
+    <string name="priority_loading">Loading priority result</string>
+    <string name="priority_deadline_value">Deadline: %1$s</string>
+    <string name="priority_importance_value">Importance: %1$s</string>
+    <string name="priority_effort_value">Estimated effort: %1$s</string>
 </resources>

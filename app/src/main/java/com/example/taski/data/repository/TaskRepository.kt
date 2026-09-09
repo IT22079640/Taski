@@ -4,6 +4,7 @@ import com.example.taski.data.dao.TaskDao
 import com.example.taski.data.entity.Task
 import com.example.taski.data.entity.TaskWithFocusSessions
 import com.example.taski.priority.PriorityCalculator
+import com.example.taski.priority.PriorityResult
 import kotlinx.coroutines.flow.Flow
 
 class TaskRepository(
@@ -31,6 +32,8 @@ class TaskRepository(
     suspend fun delete(task: Task) = taskDao.delete(task)
 
     suspend fun setCompleted(id: Long, completed: Boolean) = taskDao.setCompleted(id, completed)
+
+    fun explainPriority(task: Task): PriorityResult = priorityCalculator.calculate(task)
 
     private fun withPriority(task: Task): Task {
         val result = priorityCalculator.calculate(task)
