@@ -18,9 +18,13 @@
     <dimen name="icon_size">24dp</dimen>
     <dimen name="icon_button_size">48dp</dimen>
     <dimen name="logo_size">80dp</dimen>
-    <dimen name="logo_home_size">48dp</dimen>
-    <dimen name="logo_splash_size">160dp</dimen>
+    <dimen name="logo_home_size">64dp</dimen>
+    <dimen name="logo_splash_size">220dp</dimen>
     <dimen name="feature_icon_size">40dp</dimen>
+    <dimen name="onboarding_panel_height">220dp</dimen>
+    <dimen name="onboarding_art_size">96dp</dimen>
+    <dimen name="page_dot_size">8dp</dimen>
+    <dimen name="page_dot_active_width">24dp</dimen>
     <dimen name="empty_icon_size">48dp</dimen>
     <dimen name="empty_icon_container">72dp</dimen>
     <dimen name="fab_margin">16dp</dimen>

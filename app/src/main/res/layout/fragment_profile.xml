@@ -24,17 +24,10 @@
             android:src="@drawable/taski_logo" />
 
         <TextView
-            style="@style/TextAppearance.Taski.ScreenTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_lg"
-            android:text="@string/app_name" />
-
-        <TextView
             style="@style/TextAppearance.Taski.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xs"
+            android:layout_marginTop="@dimen/spacing_sm"
             android:text="@string/app_tagline" />
 
         <com.google.android.material.card.MaterialCardView

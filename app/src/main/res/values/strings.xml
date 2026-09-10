@@ -9,16 +9,17 @@
     <string name="nav_profile">Profile</string>
 
     <string name="onboarding_title">Welcome to Taski</string>
-    <string name="onboarding_subtitle">A simple way to plan your day, focus on what matters, and keep your progress in one place.</string>
-    <string name="onboarding_feature_organize_title">Organize tasks</string>
-    <string name="onboarding_feature_organize_body">Capture assignments, deadlines, and personal work in one list.</string>
-    <string name="onboarding_feature_priority_title">Prioritize important work</string>
-    <string name="onboarding_feature_priority_body">Taski ranks tasks with a clear rule-based priority score.</string>
-    <string name="onboarding_feature_focus_title">Focus with a timer</string>
-    <string name="onboarding_feature_focus_body">Use a task-specific Pomodoro timer when you are ready to work.</string>
-    <string name="onboarding_feature_progress_title">Track your progress</string>
-    <string name="onboarding_feature_progress_body">See completions, focus time, and your daily streak as you go.</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
     <string name="onboarding_get_started">Get Started</string>
+    <string name="onboarding_page_1_title">Manage Tasks Effortlessly</string>
+    <string name="onboarding_page_1_body">Create, organize, and track all your university tasks in one place.</string>
+    <string name="onboarding_page_2_title">AI-Powered Prioritization</string>
+    <string name="onboarding_page_2_body">Taski ranks each task with a transparent rule-based score from deadline, importance, and effort.</string>
+    <string name="onboarding_page_3_title">Plan Your Day, Stay Focused</string>
+    <string name="onboarding_page_3_body">Build a daily focus plan and use a task-specific Pomodoro timer when you are ready to work.</string>
+    <string name="cd_onboarding_page">Onboarding page %1$d of 3</string>
+    <string name="cd_onboarding_illustration">Onboarding illustration</string>
 
     <string name="home_greeting">Welcome to Taski</string>
     <string name="home_message">Start by adding a task to plan your day.</string>

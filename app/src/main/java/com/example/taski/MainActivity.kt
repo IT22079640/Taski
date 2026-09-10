@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.taski.reminder.NotificationPermissionHelper
@@ -31,10 +32,11 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
+        val navHost = findViewById<View>(R.id.nav_host_fragment)
         bottomNav.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val showBottomNav = MAIN_DESTINATIONS.contains(destination.id)
-            bottomNav.visibility = if (showBottomNav) View.VISIBLE else View.GONE
+            applyBottomNavVisibility(navHost, bottomNav, showBottomNav)
             if (showBottomNav && !notificationPromptShown) {
                 notificationPromptShown = true
                 NotificationPermissionHelper.maybePrompt(this, notificationPermissionLauncher)
@@ -46,6 +48,23 @@ class MainActivity : AppCompatActivity() {
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun applyBottomNavVisibility(
+        navHost: View,
+        bottomNav: BottomNavigationView,
+        show: Boolean
+    ) {
+        bottomNav.visibility = if (show) View.VISIBLE else View.GONE
+        val params = navHost.layoutParams as ConstraintLayout.LayoutParams
+        if (show) {
+            params.bottomToTop = R.id.bottom_nav
+            params.bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+        } else {
+            params.bottomToTop = ConstraintLayout.LayoutParams.UNSET
+            params.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+        }
+        navHost.layoutParams = params
     }
 
     private companion object {
