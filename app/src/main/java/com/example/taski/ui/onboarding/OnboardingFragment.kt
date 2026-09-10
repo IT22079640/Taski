@@ -20,6 +20,7 @@ class OnboardingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<MaterialButton>(R.id.btn_get_started).setOnClickListener {
+            OnboardingPreferences.markCompleted(requireContext())
             findNavController().navigate(R.id.action_onboarding_to_main)
         }
     }

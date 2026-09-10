@@ -96,6 +96,15 @@ class TaskEditorFragment : Fragment() {
             )
         }
 
+        viewModel.saveEnabled.observe(viewLifecycleOwner) { enabled ->
+            saveButton.isEnabled = enabled
+        }
+        viewModel.editMissing.observe(viewLifecycleOwner) { missing ->
+            if (missing) {
+                findNavController().popBackStack()
+            }
+        }
+
         viewModel.formErrors.observe(viewLifecycleOwner) { errors ->
             layoutTitle.error = errors.title
             layoutDeadline.error = errors.deadline
@@ -155,8 +164,8 @@ class TaskEditorFragment : Fragment() {
             .setSelection(selectedDeadlineMillis ?: MaterialDatePicker.todayInUtcMilliseconds())
             .build()
         picker.addOnPositiveButtonClickListener { millis ->
-            selectedDeadlineMillis = millis
-            inputDeadline.setText(DateUtils.formatDisplay(millis))
+            selectedDeadlineMillis = DateUtils.utcMidnightToLocalStartOfDay(millis)
+            inputDeadline.setText(DateUtils.formatDisplay(selectedDeadlineMillis!!))
         }
         picker.show(parentFragmentManager, DATE_PICKER_TAG)
     }

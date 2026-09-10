@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.taski.R
+import com.example.taski.ui.onboarding.OnboardingPreferences
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,14 @@ class SplashFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             delay(SPLASH_DELAY_MS)
             if (!isAdded) return@launch
-            findNavController().navigate(R.id.action_splash_to_onboarding)
+            val navController = findNavController()
+            if (navController.currentDestination?.id != R.id.splashFragment) return@launch
+            val destination = if (OnboardingPreferences.isCompleted(requireContext())) {
+                R.id.action_splash_to_main
+            } else {
+                R.id.action_splash_to_onboarding
+            }
+            navController.navigate(destination)
         }
     }
 

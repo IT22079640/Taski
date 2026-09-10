@@ -152,4 +152,42 @@ class LocalDatesTest {
         val previous = LocalDates.previousStartOfDay(start, utc)
         assertEquals(24 * 60 * 60 * 1000L, start - previous)
     }
+
+    @Test
+    fun calendarDaysUntil_sameLocalDayIsZero() {
+        val pacific = TimeZone.getTimeZone("America/Los_Angeles")
+        val now = localMillis(pacific, 2026, Calendar.SEPTEMBER, 10, 20)
+        val deadline = localMillis(pacific, 2026, Calendar.SEPTEMBER, 10, 0)
+        assertEquals(0, LocalDates.calendarDaysUntil(deadline, now, pacific))
+    }
+
+    @Test
+    fun calendarDaysUntil_nextLocalDayIsOne() {
+        val pacific = TimeZone.getTimeZone("America/Los_Angeles")
+        val now = localMillis(pacific, 2026, Calendar.SEPTEMBER, 10, 20)
+        val deadline = localMillis(pacific, 2026, Calendar.SEPTEMBER, 11, 0)
+        assertEquals(1, LocalDates.calendarDaysUntil(deadline, now, pacific))
+    }
+
+    @Test
+    fun calendarDaysUntil_previousLocalDayIsNegative() {
+        val pacific = TimeZone.getTimeZone("America/Los_Angeles")
+        val now = localMillis(pacific, 2026, Calendar.SEPTEMBER, 10, 8)
+        val deadline = localMillis(pacific, 2026, Calendar.SEPTEMBER, 9, 0)
+        assertEquals(-1, LocalDates.calendarDaysUntil(deadline, now, pacific))
+    }
+
+    private fun localMillis(
+        timeZone: TimeZone,
+        year: Int,
+        month: Int,
+        day: Int,
+        hour: Int
+    ): Long {
+        val calendar = Calendar.getInstance(timeZone)
+        calendar.clear()
+        calendar.set(year, month, day, hour, 0, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.timeInMillis
+    }
 }

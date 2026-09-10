@@ -14,6 +14,10 @@ import kotlinx.coroutines.launch
 class TaskEditorViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = (application as TaskiApplication).taskRepository
 
+    private var editingTaskId: Long = 0L
+    private var loadCompleted: Boolean = true
+    private var saveInFlight: Boolean = false
+
     private val _existingTask = MutableLiveData<Task?>()
     val existingTask: LiveData<Task?> = _existingTask
 
@@ -23,13 +27,33 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
     private val _savedTaskId = MutableLiveData<Long?>()
     val savedTaskId: LiveData<Long?> = _savedTaskId
 
+    private val _saveEnabled = MutableLiveData(true)
+    val saveEnabled: LiveData<Boolean> = _saveEnabled
+
+    private val _editMissing = MutableLiveData(false)
+    val editMissing: LiveData<Boolean> = _editMissing
+
     fun load(taskId: Long) {
+        editingTaskId = taskId
+        _editMissing.value = false
         if (taskId <= 0L) {
+            loadCompleted = true
             _existingTask.value = null
+            _saveEnabled.value = true
             return
         }
+        loadCompleted = false
+        _saveEnabled.value = false
         viewModelScope.launch {
-            _existingTask.value = repository.getById(taskId)
+            val loaded = repository.getById(taskId)
+            _existingTask.value = loaded
+            loadCompleted = true
+            if (loaded == null) {
+                _editMissing.value = true
+                _saveEnabled.value = false
+            } else {
+                _saveEnabled.value = true
+            }
         }
     }
 
@@ -41,6 +65,10 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
         importanceLabel: String,
         category: String
     ) {
+        if (saveInFlight) return
+        if (editingTaskId > 0L && !loadCompleted) return
+        if (editingTaskId > 0L && _existingTask.value == null) return
+
         val trimmedTitle = title.trim()
         val trimmedCategory = category.trim()
         val importance = ImportanceLabels.fromLabel(importanceLabel)
@@ -65,7 +93,7 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
 
         val current = _existingTask.value
         val task = Task(
-            id = current?.id ?: 0L,
+            id = if (editingTaskId > 0L) editingTaskId else 0L,
             title = trimmedTitle,
             description = description.trim(),
             deadline = deadlineMillis!!,
@@ -78,14 +106,23 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
             completedAt = current?.completedAt
         )
 
+        saveInFlight = true
+        _saveEnabled.value = false
         viewModelScope.launch {
-            val savedId = if (current == null) {
-                repository.insert(task)
-            } else {
-                repository.update(task)
-                current.id
+            try {
+                val savedId = if (editingTaskId > 0L) {
+                    repository.update(task)
+                    editingTaskId
+                } else {
+                    repository.insert(task)
+                }
+                _savedTaskId.value = savedId
+            } finally {
+                saveInFlight = false
+                if (_savedTaskId.value == null) {
+                    _saveEnabled.value = true
+                }
             }
-            _savedTaskId.value = savedId
         }
     }
 

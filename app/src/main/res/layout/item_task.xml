@@ -33,6 +33,7 @@
             android:layout_marginStart="@dimen/spacing_sm"
             android:layout_marginEnd="@dimen/spacing_sm"
             android:maxLines="3"
+            android:ellipsize="end"
             app:layout_constraintEnd_toStartOf="@id/button_delete"
             app:layout_constraintStart_toEndOf="@id/checkbox_complete"
             app:layout_constraintTop_toTopOf="parent"

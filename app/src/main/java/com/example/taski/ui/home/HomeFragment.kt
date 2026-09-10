@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.example.taski.R
 import com.example.taski.data.entity.Task
 import com.example.taski.progress.FocusTimeFormatter
@@ -37,12 +38,12 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.taskEditorFragment)
         }
         view.findViewById<MaterialButton>(R.id.btn_view_tasks).setOnClickListener {
-            findNavController().navigate(R.id.tasksFragment)
+            navigateToTab(R.id.tasksFragment)
         }
-        val openPlan = View.OnClickListener { findNavController().navigate(R.id.planFragment) }
+        val openPlan = View.OnClickListener { navigateToTab(R.id.planFragment) }
         view.findViewById<View>(R.id.card_plan).setOnClickListener(openPlan)
         view.findViewById<MaterialButton>(R.id.btn_open_plan).setOnClickListener(openPlan)
-        val openProgress = View.OnClickListener { findNavController().navigate(R.id.progressFragment) }
+        val openProgress = View.OnClickListener { navigateToTab(R.id.progressFragment) }
         view.findViewById<View>(R.id.card_progress).setOnClickListener(openProgress)
         view.findViewById<MaterialButton>(R.id.btn_view_progress).setOnClickListener(openProgress)
 
@@ -121,6 +122,21 @@ class HomeFragment : Fragment() {
     private fun openTask(taskId: Long) {
         val args = Bundle().apply { putLong(TaskEditorFragment.ARG_TASK_ID, taskId) }
         findNavController().navigate(R.id.taskEditorFragment, args)
+    }
+
+    private fun navigateToTab(destinationId: Int) {
+        if (findNavController().currentDestination?.id == destinationId) return
+        findNavController().navigate(
+            destinationId,
+            null,
+            navOptions {
+                popUpTo(R.id.homeFragment) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        )
     }
 
     private fun streakLabel(days: Int): String = when (days) {

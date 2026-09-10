@@ -2,7 +2,9 @@ package com.example.taski.priority
 
 import com.example.taski.data.entity.Importance
 import com.example.taski.data.entity.Task
+import com.example.taski.progress.LocalDates
 import kotlin.math.roundToInt
+import java.util.TimeZone
 
 /**
  * Offline rule-based priority engine.
@@ -58,7 +60,7 @@ class PriorityCalculator {
     }
 
     private fun daysUntil(deadlineMillis: Long, nowMillis: Long): Int {
-        return ((deadlineMillis / DAY_MS) - (nowMillis / DAY_MS)).toInt()
+        return LocalDates.calendarDaysUntil(deadlineMillis, nowMillis, TimeZone.getDefault())
     }
 
     private fun urgencyScore(daysUntilDeadline: Int): Int = when {
@@ -131,6 +133,5 @@ class PriorityCalculator {
         const val SCORE_MAX = 100
         const val LEVEL_HIGH_MIN = 70
         const val LEVEL_MEDIUM_MIN = 40
-        private const val DAY_MS = 86_400_000L
     }
 }

@@ -34,6 +34,25 @@ object LocalDates {
     fun isSameDay(leftMillis: Long, rightMillis: Long, timeZone: TimeZone): Boolean =
         startOfDay(leftMillis, timeZone) == startOfDay(rightMillis, timeZone)
 
+    fun calendarDaysUntil(deadlineMillis: Long, nowMillis: Long, timeZone: TimeZone): Int {
+        val deadlineStart = startOfDay(deadlineMillis, timeZone)
+        val nowStart = startOfDay(nowMillis, timeZone)
+        val calendar = calendarAt(nowStart, timeZone)
+        var days = 0
+        if (deadlineStart >= nowStart) {
+            while (calendar.timeInMillis < deadlineStart) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1)
+                days++
+            }
+        } else {
+            while (calendar.timeInMillis > deadlineStart) {
+                calendar.add(Calendar.DAY_OF_MONTH, -1)
+                days--
+            }
+        }
+        return days
+    }
+
     private fun calendarAt(millis: Long, timeZone: TimeZone): Calendar {
         val calendar = Calendar.getInstance(timeZone)
         calendar.timeInMillis = millis
