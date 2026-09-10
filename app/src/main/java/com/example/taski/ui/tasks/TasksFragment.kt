@@ -31,7 +31,7 @@ class TasksFragment : Fragment() {
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_tasks)
         val emptyState = view.findViewById<View>(R.id.tasks_empty_state)
         val adapter = TaskAdapter(
-            onTaskClick = { openEditor(it.id) },
+            onTaskClick = { openDetails(it.id) },
             onToggleComplete = { task, completed -> viewModel.setCompleted(task, completed) },
             onDelete = { confirmDelete(it) }
         )
@@ -46,6 +46,11 @@ class TasksFragment : Fragment() {
             emptyState.isVisible = tasks.isEmpty()
             recycler.isVisible = tasks.isNotEmpty()
         }
+    }
+
+    private fun openDetails(taskId: Long) {
+        val args = Bundle().apply { putLong(TaskDetailsFragment.ARG_TASK_ID, taskId) }
+        findNavController().navigate(R.id.taskDetailsFragment, args)
     }
 
     private fun openEditor(taskId: Long) {

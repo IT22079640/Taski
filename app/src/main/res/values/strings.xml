@@ -64,6 +64,24 @@
     <string name="cancel">Cancel</string>
     <string name="cd_delete_task">Delete task</string>
     <string name="cd_back">Back</string>
+    <string name="details_title">Task Details</string>
+    <string name="details_edit">Edit</string>
+    <string name="details_loading">Loading task</string>
+    <string name="details_not_found_title">Task not found</string>
+    <string name="details_not_found_body">This task could not be loaded. It may have been deleted.</string>
+    <string name="details_status_pending">Pending</string>
+    <string name="details_ai_title">AI Priority</string>
+    <string name="details_ai_headline">%1$d / 100 — %2$s Priority</string>
+    <string name="details_focus_title">Focus sessions</string>
+    <string name="details_focus_empty">No focus sessions yet</string>
+    <string name="details_focus_time">Total focus time: %1$s</string>
+    <string name="details_start_focus">Start Focus</string>
+    <string name="details_created">Created %1$s</string>
+    <string name="details_category">Category: %1$s</string>
+    <plurals name="details_focus_sessions">
+        <item quantity="one">%d session</item>
+        <item quantity="other">%d sessions</item>
+    </plurals>
     <string name="importance_low">Low</string>
     <string name="importance_medium">Medium</string>
     <string name="importance_high">High</string>

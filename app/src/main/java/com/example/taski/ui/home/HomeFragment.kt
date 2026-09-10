@@ -15,7 +15,7 @@ import com.example.taski.R
 import com.example.taski.data.entity.Task
 import com.example.taski.progress.FocusTimeFormatter
 import com.example.taski.progress.FocusTimeParts
-import com.example.taski.ui.tasks.TaskEditorFragment
+import com.example.taski.ui.tasks.TaskDetailsFragment
 import com.example.taski.utils.DateUtils
 import com.example.taski.utils.ImportanceLabels
 import com.example.taski.viewmodel.HomeViewModel
@@ -120,8 +120,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun openTask(taskId: Long) {
-        val args = Bundle().apply { putLong(TaskEditorFragment.ARG_TASK_ID, taskId) }
-        findNavController().navigate(R.id.taskEditorFragment, args)
+        val args = Bundle().apply { putLong(TaskDetailsFragment.ARG_TASK_ID, taskId) }
+        findNavController().navigate(R.id.taskDetailsFragment, args)
     }
 
     private fun navigateToTab(destinationId: Int) {

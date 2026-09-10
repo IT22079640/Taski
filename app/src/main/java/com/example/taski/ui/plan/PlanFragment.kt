@@ -15,7 +15,7 @@ import com.example.taski.R
 import com.example.taski.plan.FocusPlan
 import com.example.taski.plan.FocusPlanBuilder
 import com.example.taski.ui.focus.FocusFragment
-import com.example.taski.ui.tasks.TaskEditorFragment
+import com.example.taski.ui.tasks.TaskDetailsFragment
 import com.example.taski.utils.DateUtils
 import com.example.taski.viewmodel.PlanViewModel
 import com.google.android.material.chip.Chip
@@ -40,7 +40,7 @@ class PlanFragment : Fragment() {
 
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_plan)
         val adapter = PlanTaskAdapter(
-            onOpenTask = { openEditor(it.id) },
+            onOpenTask = { openDetails(it.id) },
             onStartFocus = { openFocus(it.id) }
         )
         recycler.adapter = adapter
@@ -169,9 +169,9 @@ class PlanFragment : Fragment() {
         dialog.show()
     }
 
-    private fun openEditor(taskId: Long) {
-        val args = Bundle().apply { putLong(TaskEditorFragment.ARG_TASK_ID, taskId) }
-        findNavController().navigate(R.id.taskEditorFragment, args)
+    private fun openDetails(taskId: Long) {
+        val args = Bundle().apply { putLong(TaskDetailsFragment.ARG_TASK_ID, taskId) }
+        findNavController().navigate(R.id.taskDetailsFragment, args)
     }
 
     private fun openFocus(taskId: Long) {

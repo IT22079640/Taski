@@ -50,8 +50,28 @@
             android:label="@string/nav_tasks"
             tools:layout="@layout/fragment_tasks">
             <action
+                android:id="@+id/action_tasks_to_details"
+                app:destination="@id/taskDetailsFragment" />
+            <action
                 android:id="@+id/action_tasks_to_editor"
                 app:destination="@id/taskEditorFragment" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/taskDetailsFragment"
+            android:name="com.example.taski.ui.tasks.TaskDetailsFragment"
+            android:label="@string/details_title"
+            tools:layout="@layout/fragment_task_details">
+            <argument
+                android:name="taskId"
+                app:argType="long"
+                android:defaultValue="0L" />
+            <action
+                android:id="@+id/action_details_to_editor"
+                app:destination="@id/taskEditorFragment" />
+            <action
+                android:id="@+id/action_details_to_focus"
+                app:destination="@id/focusFragment" />
         </fragment>
 
         <fragment
@@ -63,6 +83,10 @@
                 android:name="taskId"
                 app:argType="long"
                 android:defaultValue="0L" />
+            <argument
+                android:name="returnToDetails"
+                app:argType="boolean"
+                android:defaultValue="false" />
             <action
                 android:id="@+id/action_editor_to_priority_result"
                 app:destination="@id/priorityResultFragment"

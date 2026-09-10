@@ -40,6 +40,7 @@ class TaskEditorFragment : Fragment() {
 
         val taskId = arguments?.getLong(ARG_TASK_ID, 0L) ?: 0L
         val isEditing = taskId > 0L
+        val returnToDetails = arguments?.getBoolean(ARG_RETURN_TO_DETAILS, false) == true
         if (savedInstanceState?.containsKey(STATE_DEADLINE) == true) {
             selectedDeadlineMillis = savedInstanceState.getLong(STATE_DEADLINE)
         }
@@ -116,16 +117,20 @@ class TaskEditorFragment : Fragment() {
         viewModel.savedTaskId.observe(viewLifecycleOwner) { savedId ->
             if (savedId != null && savedId > 0L) {
                 viewModel.onSaveHandled()
-                val args = Bundle().apply {
-                    putLong(PriorityResultFragment.ARG_TASK_ID, savedId)
-                }
-                findNavController().navigate(
-                    R.id.priorityResultFragment,
-                    args,
-                    navOptions {
-                        popUpTo(R.id.taskEditorFragment) { inclusive = true }
+                if (returnToDetails) {
+                    findNavController().popBackStack()
+                } else {
+                    val args = Bundle().apply {
+                        putLong(PriorityResultFragment.ARG_TASK_ID, savedId)
                     }
-                )
+                    findNavController().navigate(
+                        R.id.priorityResultFragment,
+                        args,
+                        navOptions {
+                            popUpTo(R.id.taskEditorFragment) { inclusive = true }
+                        }
+                    )
+                }
             }
         }
 
@@ -177,6 +182,7 @@ class TaskEditorFragment : Fragment() {
 
     companion object {
         const val ARG_TASK_ID = "taskId"
+        const val ARG_RETURN_TO_DETAILS = "returnToDetails"
         private const val DATE_PICKER_TAG = "task_deadline_picker"
         private const val STATE_DEADLINE = "selected_deadline"
     }
