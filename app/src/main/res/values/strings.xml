@@ -41,20 +41,15 @@
     <string name="tasks_title">Tasks</string>
     <string name="tasks_empty_title">No tasks yet</string>
     <string name="tasks_empty_body">Add a task to start organizing your work.</string>
-    <string name="tasks_add">Add task</string>
     <string name="add_task_title">Add Task</string>
     <string name="edit_task_title">Edit Task</string>
-    <string name="task_title">Title</string>
     <string name="task_title_required">Title (required)</string>
     <string name="task_description">Description</string>
     <string name="task_description_optional">Optional notes for this task</string>
     <string name="task_deadline">Deadline</string>
     <string name="task_deadline_required">Deadline (required)</string>
-    <string name="task_effort">Estimated effort (hours)</string>
     <string name="task_effort_required">Estimated effort in hours (required)</string>
-    <string name="task_importance">Importance</string>
     <string name="task_importance_required">Importance (required)</string>
-    <string name="task_category">Category</string>
     <string name="task_category_required">Category (required)</string>
     <string name="task_score">Score %1$d</string>
     <string name="task_completed_label">Completed</string>
@@ -74,8 +69,6 @@
     <string name="task_meta">%1$s · %2$s · %3$s</string>
 
     <string name="plan_title">Today\'s Focus Plan</string>
-    <string name="plan_empty_title">No plan yet</string>
-    <string name="plan_empty_body">Your focus plan will appear here after you add tasks.</string>
     <string name="plan_caught_up_title">You\'re all caught up!</string>
     <string name="plan_caught_up_body">No pending tasks right now. Add a task when you are ready, or enjoy the break.</string>
     <string name="plan_summary_tasks_label">Tasks</string>
@@ -185,7 +178,6 @@
     <string name="profile_about_title">About Taski</string>
     <string name="profile_about_body">Taski is an offline productivity app for university students and young professionals. Plan tasks, focus locally, and track progress — no account required.</string>
 
-    <string name="empty_no_tasks">No tasks yet</string>
     <string name="cd_taski_logo">Taski logo</string>
     <string name="cd_add_task">Add task</string>
     <string name="cd_empty_tasks">No tasks yet</string>

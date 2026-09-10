@@ -2,7 +2,6 @@ package com.example.taski.data.repository
 
 import com.example.taski.data.dao.TaskDao
 import com.example.taski.data.entity.Task
-import com.example.taski.data.entity.TaskWithFocusSessions
 import com.example.taski.priority.PriorityCalculator
 import com.example.taski.priority.PriorityResult
 import com.example.taski.reminder.TaskReminderScheduler
@@ -21,9 +20,6 @@ class TaskRepository(
     fun observeCompleted(): Flow<List<Task>> = taskDao.observeCompleted()
 
     fun observeById(id: Long): Flow<Task?> = taskDao.observeById(id)
-
-    fun observeWithSessions(id: Long): Flow<TaskWithFocusSessions?> =
-        taskDao.observeWithSessions(id)
 
     suspend fun getById(id: Long): Task? = taskDao.getById(id)
 
