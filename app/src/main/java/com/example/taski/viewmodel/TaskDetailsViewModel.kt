@@ -9,7 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.taski.TaskiApplication
 import com.example.taski.data.entity.FocusSession
 import com.example.taski.data.entity.Task
+import com.example.taski.priority.PriorityChangeFeedback
+import com.example.taski.priority.PriorityExplanation
+import com.example.taski.priority.PriorityExplainer
 import com.example.taski.priority.PriorityResult
+import com.example.taski.priority.SmartTaskBreakdown
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
@@ -26,6 +30,9 @@ class TaskDetailsViewModel(
     private val _deleted = MutableLiveData(false)
     val deleted: LiveData<Boolean> = _deleted
 
+    private val _priorityUpdate = MutableLiveData<PriorityChangeFeedback?>(null)
+    val priorityUpdate: LiveData<PriorityChangeFeedback?> = _priorityUpdate
+
     private val _uiState = MutableLiveData<UiState>(
         if (taskId <= 0L) UiState.NotFound else UiState.Loading
     )
@@ -41,9 +48,16 @@ class TaskDetailsViewModel(
                     if (task == null) {
                         UiState.NotFound
                     } else {
+                        val priority = taskRepository.explainPriority(task)
                         UiState.Ready(
                             task = task,
-                            priority = taskRepository.explainPriority(task),
+                            priority = priority,
+                            explanation = PriorityExplainer.explain(task, priority),
+                            breakdownSteps = if (SmartTaskBreakdown.shouldSuggest(task.estimatedEffort)) {
+                                SmartTaskBreakdown.stepsFor(task.category)
+                            } else {
+                                emptyList()
+                            },
                             sessions = sessions,
                             sessionCount = sessions.size,
                             totalFocusMillis = sessions.sumOf { it.duration }
@@ -65,6 +79,16 @@ class TaskDetailsViewModel(
         }
     }
 
+    fun showPriorityUpdate(feedback: PriorityChangeFeedback) {
+        if (feedback.shouldShow) {
+            _priorityUpdate.value = feedback
+        }
+    }
+
+    fun dismissPriorityUpdate() {
+        _priorityUpdate.value = null
+    }
+
     fun delete() {
         if (taskId <= 0L || _deleted.value == true) return
         viewModelScope.launch {
@@ -80,6 +104,8 @@ class TaskDetailsViewModel(
         data class Ready(
             val task: Task,
             val priority: PriorityResult,
+            val explanation: PriorityExplanation,
+            val breakdownSteps: List<String>,
             val sessions: List<FocusSession>,
             val sessionCount: Int,
             val totalFocusMillis: Long

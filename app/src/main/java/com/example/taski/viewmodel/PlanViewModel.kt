@@ -9,6 +9,8 @@ import androidx.lifecycle.asLiveData
 import com.example.taski.TaskiApplication
 import com.example.taski.plan.FocusPlan
 import com.example.taski.plan.FocusPlanBuilder
+import com.example.taski.plan.FocusRecommendation
+import com.example.taski.plan.FocusRecommendationBuilder
 
 class PlanViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = (application as TaskiApplication).taskRepository
@@ -36,11 +38,18 @@ class PlanViewModel(application: Application) : AndroidViewModel(application) {
     private fun rebuild() {
         val tasks = pendingTasks.value ?: return
         val available = currentAvailableMinutes()
-        _uiState.value = UiState.Ready(FocusPlanBuilder.build(tasks, available))
+        val plan = FocusPlanBuilder.build(tasks, available)
+        _uiState.value = UiState.Ready(
+            plan = plan,
+            recommendation = FocusRecommendationBuilder.from(plan)
+        )
     }
 
     sealed class UiState {
         data object Loading : UiState()
-        data class Ready(val plan: FocusPlan) : UiState()
+        data class Ready(
+            val plan: FocusPlan,
+            val recommendation: FocusRecommendation
+        ) : UiState()
     }
 }

@@ -51,6 +51,9 @@ class ProgressFragment : Fragment() {
     ) {
         view.findViewById<View>(R.id.progress_empty_intro).isVisible = !dashboard.hasAnyActivity
 
+        view.findViewById<TextView>(R.id.text_insight_title).text = dashboard.insight.title
+        view.findViewById<TextView>(R.id.text_insight_body).text = dashboard.insight.body
+
         val completed = view.findViewById<TextView>(R.id.text_completed_count)
         val pending = view.findViewById<TextView>(R.id.text_pending_count)
         val totalFocus = view.findViewById<TextView>(R.id.text_total_focus)

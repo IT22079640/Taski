@@ -19,6 +19,129 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_recommendation"
+        style="@style/Widget.Taski.Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/plan_title"
+        app:strokeColor="@color/primary"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_recommend_kicker"
+                style="@style/TextAppearance.Taski.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/plan_recommend_kicker"
+                android:textColor="@color/primary" />
+
+            <LinearLayout
+                android:id="@+id/group_recommend_task"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_recommend_overflow"
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text="@string/plan_recommend_overflow"
+                    android:visibility="gone" />
+
+                <TextView
+                    style="@style/TextAppearance.Taski.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="@string/plan_recommend_start_with"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    android:id="@+id/text_recommend_title"
+                    style="@style/TextAppearance.Taski.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/text_primary"
+                    tools:text="Database Assignment" />
+
+                <TextView
+                    style="@style/TextAppearance.Taski.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="@string/plan_recommend_why"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_recommend_why"
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    tools:text="Due tomorrow • High importance • 2h estimated effort" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_recommend_start_focus"
+                    style="@style/Widget.Taski.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/plan_start_focus" />
+
+                <TextView
+                    android:id="@+id/text_recommend_order_title"
+                    style="@style/TextAppearance.Taski.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg"
+                    android:text="@string/plan_recommend_order" />
+
+                <LinearLayout
+                    android:id="@+id/container_recommend_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/group_recommend_caught_up"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/TextAppearance.Taski.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text="@string/plan_caught_up_title" />
+
+                <TextView
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:text="@string/plan_caught_up_body" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_summary"
         style="@style/Widget.Taski.Card"
         android:layout_width="0dp"
@@ -26,7 +149,7 @@
         android:layout_marginTop="@dimen/spacing_lg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plan_title">
+        app:layout_constraintTop_toBottomOf="@id/card_recommendation">
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -14,10 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.taski.R
 import com.example.taski.plan.FocusPlan
 import com.example.taski.plan.FocusPlanBuilder
+import com.example.taski.plan.FocusRecommendation
 import com.example.taski.ui.focus.FocusFragment
 import com.example.taski.ui.tasks.TaskDetailsFragment
 import com.example.taski.utils.DateUtils
 import com.example.taski.viewmodel.PlanViewModel
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -66,6 +69,13 @@ class PlanFragment : Fragment() {
         val summaryPlanned = view.findViewById<TextView>(R.id.text_summary_planned)
         val summaryAvailable = view.findViewById<TextView>(R.id.text_summary_available)
         val overflowNote = view.findViewById<View>(R.id.text_overflow_note)
+        val recommendationCard = view.findViewById<View>(R.id.card_recommendation)
+        val startRecommended = view.findViewById<MaterialButton>(R.id.btn_recommend_start_focus)
+        startRecommended.setOnClickListener {
+            val ready = viewModel.uiState.value as? PlanViewModel.UiState.Ready ?: return@setOnClickListener
+            val taskId = ready.recommendation.recommendedTask?.id ?: return@setOnClickListener
+            openFocus(taskId)
+        }
 
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -74,15 +84,17 @@ class PlanFragment : Fragment() {
                     emptyState.isVisible = false
                     recycler.isVisible = false
                     overflowNote.isVisible = false
+                    recommendationCard.isVisible = false
                 }
                 is PlanViewModel.UiState.Ready -> {
                     loading.isVisible = false
                     bindSummary(state.plan, summaryTasks, summaryPlanned, summaryAvailable)
                     overflowNote.isVisible = state.plan.exceedsAvailableTime
-                    emptyState.isVisible = state.plan.isCaughtUp
+                    emptyState.isVisible = false
                     recycler.isVisible = !state.plan.isCaughtUp
                     adapter.submitList(state.plan.selectedTasks)
                     bindTimeChips(chipGroup, chipCustom, state.plan.availableMinutes)
+                    bindRecommendation(view, state)
                 }
             }
         }
@@ -106,6 +118,38 @@ class PlanFragment : Fragment() {
             R.string.plan_summary_available_cd,
             DateUtils.formatEffortHours(plan.availableMinutes)
         )
+    }
+
+    private fun bindRecommendation(view: View, state: PlanViewModel.UiState.Ready) {
+        val recommendation = state.recommendation
+        view.findViewById<View>(R.id.card_recommendation).isVisible = true
+        val caughtUp = view.findViewById<View>(R.id.group_recommend_caught_up)
+        val taskGroup = view.findViewById<View>(R.id.group_recommend_task)
+        caughtUp.isVisible = recommendation.isCaughtUp
+        taskGroup.isVisible = !recommendation.isCaughtUp
+        if (recommendation.isCaughtUp) return
+
+        val task = recommendation.recommendedTask ?: return
+        view.findViewById<TextView>(R.id.text_recommend_title).text = task.title
+        view.findViewById<TextView>(R.id.text_recommend_why).text = recommendation.whySummary
+        view.findViewById<View>(R.id.text_recommend_overflow).isVisible =
+            recommendation.state == FocusRecommendation.State.OVERFLOW
+
+        val orderContainer = view.findViewById<LinearLayout>(R.id.container_recommend_order)
+        orderContainer.removeAllViews()
+        recommendation.orderedTasks.forEachIndexed { index, ordered ->
+            val row = TextView(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    topMargin = resources.getDimensionPixelSize(R.dimen.spacing_xs)
+                }
+                text = getString(R.string.plan_recommend_order_item, index + 1, ordered.title)
+                setTextAppearance(R.style.TextAppearance_Taski_Body)
+            }
+            orderContainer.addView(row)
+        }
     }
 
     private fun bindTimeChips(chipGroup: ChipGroup, chipCustom: Chip, minutes: Int) {

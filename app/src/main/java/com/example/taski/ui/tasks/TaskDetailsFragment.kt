@@ -8,11 +8,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.example.taski.R
+import com.example.taski.priority.PriorityChangeFeedback
 import com.example.taski.priority.PriorityLevel
 import com.example.taski.progress.FocusTimeFormatter
 import com.example.taski.progress.FocusTimeParts
@@ -55,6 +57,29 @@ class TaskDetailsFragment : Fragment() {
             val ready = viewModel.uiState.value as? TaskDetailsViewModel.UiState.Ready ?: return@setOnClickListener
             viewModel.setCompleted(!ready.task.completed)
         }
+        view.findViewById<MaterialButton>(R.id.btn_priority_update_dismiss).setOnClickListener {
+            viewModel.dismissPriorityUpdate()
+        }
+
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Bundle>(REQUEST_PRIORITY_UPDATED)
+            ?.observe(viewLifecycleOwner) { bundle ->
+                if (bundle == null) return@observe
+                val previousLevel = bundle.getString(KEY_PREVIOUS_LEVEL) ?: return@observe
+                val newLevel = bundle.getString(KEY_NEW_LEVEL) ?: return@observe
+                val feedback = PriorityChangeFeedback(
+                    previousScore = bundle.getInt(KEY_PREVIOUS_SCORE),
+                    newScore = bundle.getInt(KEY_NEW_SCORE),
+                    previousLevel = PriorityLevel.valueOf(previousLevel),
+                    newLevel = PriorityLevel.valueOf(newLevel),
+                    levelLine = bundle.getString(KEY_LEVEL_LINE),
+                    scoreLine = bundle.getString(KEY_SCORE_LINE).orEmpty(),
+                    explanation = bundle.getString(KEY_EXPLANATION).orEmpty()
+                )
+                viewModel.showPriorityUpdate(feedback)
+                findNavController().currentBackStackEntry?.savedStateHandle
+                    ?.remove<Bundle>(REQUEST_PRIORITY_UPDATED)
+            }
 
         val loading = view.findViewById<View>(R.id.details_loading)
         val notFound = view.findViewById<View>(R.id.details_not_found)
@@ -75,6 +100,10 @@ class TaskDetailsFragment : Fragment() {
             if (deleted) {
                 navigateToTasks()
             }
+        }
+
+        viewModel.priorityUpdate.observe(viewLifecycleOwner) { feedback ->
+            bindPriorityUpdate(view, feedback)
         }
     }
 
@@ -123,18 +152,18 @@ class TaskDetailsFragment : Fragment() {
             )
         }
 
-        val headline = view.findViewById<TextView>(R.id.text_ai_headline)
-        headline.text = getString(
-            R.string.details_ai_headline,
-            task.priorityScore,
-            levelLabel(level)
-        )
-        headline.setTextColor(ContextCompat.getColor(requireContext(), levelColor(level)))
-        headline.contentDescription = getString(
+        val scoreView = view.findViewById<TextView>(R.id.text_ai_score)
+        scoreView.text = getString(R.string.details_ai_score, task.priorityScore)
+        scoreView.setTextColor(ContextCompat.getColor(requireContext(), levelColor(level)))
+        scoreView.contentDescription = getString(
             R.string.cd_priority_score,
             task.priorityScore,
             levelLabel(level)
         )
+
+        val levelView = view.findViewById<TextView>(R.id.text_ai_level)
+        levelView.text = getString(R.string.details_ai_level, levelLabel(level))
+        levelView.setTextColor(ContextCompat.getColor(requireContext(), levelColor(level)))
 
         bindFactor(
             view,
@@ -180,6 +209,33 @@ class TaskDetailsFragment : Fragment() {
             reasonsContainer.addView(reasonView)
         }
 
+        view.findViewById<TextView>(R.id.text_ai_why).text = state.explanation.whyThisTask
+        view.findViewById<TextView>(R.id.text_ai_recommendation_title).text =
+            state.explanation.recommendationTitle
+        view.findViewById<TextView>(R.id.text_ai_recommendation_body).text =
+            state.explanation.recommendationBody
+
+        val breakdownCard = view.findViewById<View>(R.id.card_breakdown)
+        val breakdownContainer = view.findViewById<LinearLayout>(R.id.container_breakdown)
+        val showBreakdown = state.breakdownSteps.isNotEmpty()
+        breakdownCard.isVisible = showBreakdown
+        breakdownContainer.removeAllViews()
+        if (showBreakdown) {
+            state.breakdownSteps.forEachIndexed { index, step ->
+                val stepView = TextView(requireContext()).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        topMargin = resources.getDimensionPixelSize(R.dimen.spacing_sm)
+                    }
+                    text = getString(R.string.details_breakdown_item, index + 1, step)
+                    setTextAppearance(R.style.TextAppearance_Taski_Body)
+                }
+                breakdownContainer.addView(stepView)
+            }
+        }
+
         val hasSessions = state.sessionCount > 0
         view.findViewById<View>(R.id.text_focus_empty).isVisible = !hasSessions
         val focusTime = view.findViewById<TextView>(R.id.text_focus_time)
@@ -200,6 +256,20 @@ class TaskDetailsFragment : Fragment() {
 
         view.findViewById<MaterialButton>(R.id.btn_complete).apply {
             setText(if (completed) R.string.task_incomplete else R.string.task_complete)
+        }
+    }
+
+    private fun bindPriorityUpdate(view: View, feedback: PriorityChangeFeedback?) {
+        val card = view.findViewById<View>(R.id.card_priority_update)
+        card.isVisible = feedback != null && feedback.shouldShow
+        if (feedback == null || !feedback.shouldShow) return
+        val levelView = view.findViewById<TextView>(R.id.text_priority_update_level)
+        levelView.isVisible = !feedback.levelLine.isNullOrBlank()
+        levelView.text = feedback.levelLine.orEmpty()
+        view.findViewById<TextView>(R.id.text_priority_update_score).text = feedback.scoreLine
+        view.findViewById<TextView>(R.id.text_priority_update_body).text = feedback.explanation
+        view.findViewById<NestedScrollView>(R.id.details_content).post {
+            view.findViewById<NestedScrollView>(R.id.details_content).smoothScrollTo(0, 0)
         }
     }
 
@@ -285,5 +355,13 @@ class TaskDetailsFragment : Fragment() {
 
     companion object {
         const val ARG_TASK_ID = "taskId"
+        const val REQUEST_PRIORITY_UPDATED = "taski_priority_updated"
+        const val KEY_PREVIOUS_SCORE = "previousScore"
+        const val KEY_NEW_SCORE = "newScore"
+        const val KEY_PREVIOUS_LEVEL = "previousLevel"
+        const val KEY_NEW_LEVEL = "newLevel"
+        const val KEY_LEVEL_LINE = "levelLine"
+        const val KEY_SCORE_LINE = "scoreLine"
+        const val KEY_EXPLANATION = "explanation"
     }
 }

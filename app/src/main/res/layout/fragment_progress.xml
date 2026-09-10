@@ -22,6 +22,46 @@
             android:layout_height="wrap_content"
             android:text="@string/progress_title" />
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_insight"
+            style="@style/Widget.Taski.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_lg"
+            app:strokeColor="@color/primary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_insight_kicker"
+                    style="@style/TextAppearance.Taski.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/progress_insight_kicker"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_insight_title"
+                    style="@style/TextAppearance.Taski.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    tools:text="Keep going" />
+
+                <TextView
+                    android:id="@+id/text_insight_body"
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    tools:text="Complete a few tasks and focus sessions to unlock personalized productivity insights." />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <LinearLayout
             android:id="@+id/progress_empty_intro"
             android:layout_width="match_parent"

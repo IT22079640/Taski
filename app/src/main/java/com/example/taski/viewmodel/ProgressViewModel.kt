@@ -10,6 +10,7 @@ import com.example.taski.data.entity.FocusSessionWithTask
 import com.example.taski.data.entity.Task
 import com.example.taski.progress.DayRange
 import com.example.taski.progress.LocalDates
+import com.example.taski.progress.ProductivityInsightGenerator
 import com.example.taski.progress.ProgressDashboard
 import com.example.taski.progress.StreakCalculator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,8 +52,27 @@ class ProgressViewModel(application: Application) : AndroidViewModel(application
         ) { totalFocus, todayFocus, completedSessions, recentSessions ->
             FocusSlice(totalFocus, todayFocus, completedSessions, recentSessions)
         },
-        todayRange
-    ) { tasks, focus, range ->
+        combine(todayRange, taskRepository.observeIncomplete()) { range, pending ->
+            PendingSlice(range, pending)
+        }
+    ) { tasks, focus, pending ->
+        val streakDays = StreakCalculator.currentStreak(
+            completionTimes = tasks.completionTimes,
+            nowMillis = pending.range.startInclusive,
+            timeZone = timeZone
+        )
+        val insight = ProductivityInsightGenerator.generate(
+            ProductivityInsightGenerator.statsFrom(
+                completedTasks = tasks.completed,
+                pendingTasks = pending.pendingTasks,
+                completedFocusSessions = focus.completedSessions,
+                totalFocusMillis = focus.totalFocusMillis,
+                recentCompletedTasks = tasks.recentTasks,
+                streakDays = streakDays,
+                nowMillis = pending.range.startInclusive,
+                timeZone = timeZone
+            )
+        )
         ProgressDashboard(
             completedTasks = tasks.completed,
             pendingTasks = tasks.pending,
@@ -60,13 +80,10 @@ class ProgressViewModel(application: Application) : AndroidViewModel(application
             completedFocusSessions = focus.completedSessions,
             todayCompletedTasks = tasks.todayCompleted,
             todayFocusMillis = focus.todayFocusMillis,
-            streakDays = StreakCalculator.currentStreak(
-                completionTimes = tasks.completionTimes,
-                nowMillis = range.startInclusive,
-                timeZone = timeZone
-            ),
+            streakDays = streakDays,
             recentCompletedTasks = tasks.recentTasks,
-            recentFocusSessions = focus.recentSessions
+            recentFocusSessions = focus.recentSessions,
+            insight = insight
         )
     }.asLiveData(viewModelScope.coroutineContext)
 
@@ -90,6 +107,11 @@ class ProgressViewModel(application: Application) : AndroidViewModel(application
         val todayFocusMillis: Long,
         val completedSessions: Int,
         val recentSessions: List<FocusSessionWithTask>
+    )
+
+    private data class PendingSlice(
+        val range: DayRange,
+        val pendingTasks: List<Task>
     )
 
     private companion object {

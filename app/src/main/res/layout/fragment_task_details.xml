@@ -81,6 +81,74 @@
                 android:paddingBottom="@dimen/spacing_lg">
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_priority_update"
+                    style="@style/Widget.Taski.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_lg"
+                    android:visibility="gone"
+                    app:strokeColor="@color/primary"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/details_ai_brand"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:text="@string/details_priority_updated"
+                            android:textColor="@color/primary" />
+
+                        <TextView
+                            android:id="@+id/text_priority_update_level"
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:visibility="gone"
+                            tools:text="Medium → High"
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/text_priority_update_score"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textColor="@color/text_primary"
+                            tools:text="54 → 82" />
+
+                        <TextView
+                            android:id="@+id/text_priority_update_body"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            tools:text="Your priority increased because the deadline is closer." />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_priority_update_dismiss"
+                            style="@style/Widget.Taski.Button.Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:text="@string/details_priority_updated_got_it" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.Taski.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -198,19 +266,45 @@
                         android:orientation="vertical">
 
                         <TextView
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/details_ai_brand"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold" />
+
+                        <TextView
                             style="@style/TextAppearance.Taski.Subtitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
                             android:text="@string/details_ai_title" />
 
                         <TextView
-                            android:id="@+id/text_ai_headline"
-                            style="@style/TextAppearance.Taski.Subtitle"
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:text="@string/details_ai_caption" />
+
+                        <TextView
+                            android:id="@+id/text_ai_score"
+                            style="@style/TextAppearance.Taski.Display"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/spacing_md"
                             android:textColor="@color/primary"
-                            tools:text="86 / 100 — High Priority" />
+                            tools:text="86 / 100" />
+
+                        <TextView
+                            android:id="@+id/text_ai_level"
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textAllCaps="true"
+                            tools:text="HIGH PRIORITY"
+                            tools:textColor="@color/priority_high" />
 
                         <TextView
                             android:id="@+id/label_urgency"
@@ -296,6 +390,92 @@
 
                         <LinearLayout
                             android:id="@+id/container_reasons"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:orientation="vertical" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xl"
+                            android:text="@string/details_why_title" />
+
+                        <TextView
+                            android:id="@+id/text_ai_why"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/text_primary"
+                            tools:text="This task is highly prioritized because its deadline is approaching." />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xl"
+                            android:text="@string/details_ai_recommendation" />
+
+                        <TextView
+                            android:id="@+id/text_ai_recommendation_title"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            tools:text="Start this task today." />
+
+                        <TextView
+                            android:id="@+id/text_ai_recommendation_body"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            tools:text="Its deadline and importance make it a higher priority than your other pending tasks." />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_breakdown"
+                    style="@style/Widget.Taski.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/details_ai_brand"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:text="@string/details_breakdown_title" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:text="@string/details_breakdown_intro" />
+
+                        <LinearLayout
+                            android:id="@+id/container_breakdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/spacing_sm"

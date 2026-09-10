@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.taski.TaskiApplication
 import com.example.taski.data.entity.Task
+import com.example.taski.priority.PriorityChangeExplainer
+import com.example.taski.priority.PriorityChangeFeedback
 import com.example.taski.utils.DateUtils
 import com.example.taski.utils.ImportanceLabels
 import kotlinx.coroutines.launch
@@ -26,6 +28,9 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
 
     private val _savedTaskId = MutableLiveData<Long?>()
     val savedTaskId: LiveData<Long?> = _savedTaskId
+
+    private val _saveResult = MutableLiveData<SaveResult?>()
+    val saveResult: LiveData<SaveResult?> = _saveResult
 
     private val _saveEnabled = MutableLiveData(true)
     val saveEnabled: LiveData<Boolean> = _saveEnabled
@@ -110,12 +115,30 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
         _saveEnabled.value = false
         viewModelScope.launch {
             try {
+                val previous = current
                 val savedId = if (editingTaskId > 0L) {
                     repository.update(task)
                     editingTaskId
                 } else {
                     repository.insert(task)
                 }
+                val saved = repository.getById(savedId)
+                val feedback = if (previous != null && saved != null) {
+                    PriorityChangeExplainer.explain(
+                        previousScore = previous.priorityScore,
+                        newScore = saved.priorityScore,
+                        deadlineChanged = previous.deadline != saved.deadline,
+                        importanceChanged = previous.importance != saved.importance,
+                        effortChanged = previous.estimatedEffort != saved.estimatedEffort
+                    )
+                } else {
+                    null
+                }
+                _saveResult.value = SaveResult(
+                    savedId = savedId,
+                    isEdit = previous != null,
+                    priorityChange = feedback
+                )
                 _savedTaskId.value = savedId
             } finally {
                 saveInFlight = false
@@ -128,7 +151,14 @@ class TaskEditorViewModel(application: Application) : AndroidViewModel(applicati
 
     fun onSaveHandled() {
         _savedTaskId.value = null
+        _saveResult.value = null
     }
+
+    data class SaveResult(
+        val savedId: Long,
+        val isEdit: Boolean,
+        val priorityChange: PriorityChangeFeedback?
+    )
 
     data class FormErrors(
         val title: String? = null,

@@ -70,8 +70,19 @@
     <string name="details_not_found_title">Task not found</string>
     <string name="details_not_found_body">This task could not be loaded. It may have been deleted.</string>
     <string name="details_status_pending">Pending</string>
+    <string name="details_ai_brand">Taski AI</string>
+    <string name="details_ai_caption">AI-powered rule-based prioritization</string>
     <string name="details_ai_title">AI Priority</string>
     <string name="details_ai_headline">%1$d / 100 — %2$s Priority</string>
+    <string name="details_ai_score">%1$d / 100</string>
+    <string name="details_ai_level">%1$s PRIORITY</string>
+    <string name="details_why_title">Why this task?</string>
+    <string name="details_ai_recommendation">AI Recommendation</string>
+    <string name="details_priority_updated">AI Priority Updated</string>
+    <string name="details_priority_updated_got_it">Got it</string>
+    <string name="details_breakdown_title">Smart Task Breakdown</string>
+    <string name="details_breakdown_intro">This is a large task. Taski suggests breaking it into smaller steps.</string>
+    <string name="details_breakdown_item">%1$d. %2$s</string>
     <string name="details_focus_title">Focus sessions</string>
     <string name="details_focus_empty">No focus sessions yet</string>
     <string name="details_focus_time">Total focus time: %1$s</string>
@@ -88,8 +99,14 @@
     <string name="task_meta">%1$s · %2$s · %3$s</string>
 
     <string name="plan_title">Today\'s Focus Plan</string>
+    <string name="plan_recommend_kicker">🧠 Taski recommends</string>
+    <string name="plan_recommend_start_with">Start with</string>
+    <string name="plan_recommend_why">Why?</string>
+    <string name="plan_recommend_order">Today\'s Recommended Order</string>
+    <string name="plan_recommend_order_item">%1$d. %2$s</string>
+    <string name="plan_recommend_overflow">Taski recommends starting with your highest-priority task.</string>
     <string name="plan_caught_up_title">You\'re all caught up!</string>
-    <string name="plan_caught_up_body">No pending tasks right now. Add a task when you are ready, or enjoy the break.</string>
+    <string name="plan_caught_up_body">No tasks currently need your attention.</string>
     <string name="plan_summary_tasks_label">Tasks</string>
     <string name="plan_summary_planned_label">Planned</string>
     <string name="plan_summary_available_label">Available</string>
@@ -150,6 +167,7 @@
     <string name="cd_focus_timer">Focus countdown</string>
 
     <string name="progress_title">Progress</string>
+    <string name="progress_insight_kicker">🧠 Taski Insight</string>
     <string name="progress_overview_title">Overview</string>
     <string name="progress_today_title">Today</string>
     <string name="progress_empty_title">No progress yet</string>
@@ -213,9 +231,11 @@
     <string name="priority_level_low">Low</string>
     <string name="priority_task_details">Task details</string>
     <string name="priority_factors_title">How this score was calculated</string>
-    <string name="priority_factor_urgency">Urgency</string>
-    <string name="priority_factor_importance">Importance</string>
-    <string name="priority_factor_effort">Effort</string>
+    <string name="priority_factor_urgency">🔴 Deadline urgency</string>
+    <string name="priority_factor_importance">⭐ Importance</string>
+    <string name="priority_factor_effort">⏱️ Estimated effort</string>
+    <string name="priority_why_title">Why this task?</string>
+    <string name="priority_recommendation_title">AI Recommendation</string>
     <string name="priority_factor_weight_urgency">40%</string>
     <string name="priority_factor_weight_importance">40%</string>
     <string name="priority_factor_weight_effort">20%</string>

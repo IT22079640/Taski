@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.example.taski.R
 import com.example.taski.data.entity.Task
+import com.example.taski.priority.PriorityExplanation
 import com.example.taski.priority.PriorityLevel
 import com.example.taski.priority.PriorityResult
 import com.example.taski.utils.DateUtils
@@ -54,14 +55,19 @@ class PriorityResultFragment : Fragment() {
             content.isVisible = state is PriorityResultViewModel.UiState.Ready
             continueButton.isVisible = state is PriorityResultViewModel.UiState.Ready
             if (state is PriorityResultViewModel.UiState.Ready) {
-                bindResult(view, state.task, state.priority)
+                bindResult(view, state.task, state.priority, state.explanation)
             }
         }
 
         viewModel.load(taskId)
     }
 
-    private fun bindResult(view: View, task: Task, priority: PriorityResult) {
+    private fun bindResult(
+        view: View,
+        task: Task,
+        priority: PriorityResult,
+        explanation: PriorityExplanation
+    ) {
         val score = task.priorityScore
         val level = PriorityLevel.fromScore(score)
 
@@ -133,6 +139,10 @@ class PriorityResultFragment : Fragment() {
             reasonView.setTextAppearance(R.style.TextAppearance_Taski_Body)
             reasonsContainer.addView(reasonView)
         }
+
+        view.findViewById<TextView>(R.id.text_ai_why).text = explanation.whyThisTask
+        view.findViewById<TextView>(R.id.text_ai_recommendation_title).text = explanation.recommendationTitle
+        view.findViewById<TextView>(R.id.text_ai_recommendation_body).text = explanation.recommendationBody
     }
 
     private fun bindFactor(

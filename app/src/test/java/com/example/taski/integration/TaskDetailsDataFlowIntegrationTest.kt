@@ -7,6 +7,7 @@ import com.example.taski.data.entity.Importance
 import com.example.taski.data.repository.FocusSessionRepository
 import com.example.taski.data.repository.TaskRepository
 import com.example.taski.priority.PriorityCalculator
+import com.example.taski.priority.PriorityExplainer
 import com.example.taski.priority.PriorityLevel
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -59,6 +60,7 @@ class TaskDetailsDataFlowIntegrationTest {
         val task = requireNotNull(taskRepository.observeById(id).awaitFirst())
         val explained = taskRepository.explainPriority(task)
         val expected = calculator.calculate(task)
+        val detailsCopy = PriorityExplainer.explain(task, explained)
 
         assertEquals("HCI draft", task.title)
         assertEquals(expected.score, task.priorityScore)
@@ -66,6 +68,8 @@ class TaskDetailsDataFlowIntegrationTest {
         assertEquals(expected.priorityLevel, explained.priorityLevel)
         assertEquals(3, explained.reasons.size)
         assertEquals(PriorityLevel.fromScore(task.priorityScore), explained.priorityLevel)
+        assertTrue(detailsCopy.whyThisTask.isNotBlank())
+        assertTrue(detailsCopy.recommendationTitle.isNotBlank())
     }
 
     @Test

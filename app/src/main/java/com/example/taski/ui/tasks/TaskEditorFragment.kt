@@ -116,8 +116,24 @@ class TaskEditorFragment : Fragment() {
 
         viewModel.savedTaskId.observe(viewLifecycleOwner) { savedId ->
             if (savedId != null && savedId > 0L) {
+                val saveResult = viewModel.saveResult.value
                 viewModel.onSaveHandled()
                 if (returnToDetails) {
+                    val change = saveResult?.priorityChange
+                    if (saveResult?.isEdit == true && change != null && change.shouldShow) {
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                            TaskDetailsFragment.REQUEST_PRIORITY_UPDATED,
+                            Bundle().apply {
+                                putInt(TaskDetailsFragment.KEY_PREVIOUS_SCORE, change.previousScore)
+                                putInt(TaskDetailsFragment.KEY_NEW_SCORE, change.newScore)
+                                putString(TaskDetailsFragment.KEY_PREVIOUS_LEVEL, change.previousLevel.name)
+                                putString(TaskDetailsFragment.KEY_NEW_LEVEL, change.newLevel.name)
+                                putString(TaskDetailsFragment.KEY_LEVEL_LINE, change.levelLine)
+                                putString(TaskDetailsFragment.KEY_SCORE_LINE, change.scoreLine)
+                                putString(TaskDetailsFragment.KEY_EXPLANATION, change.explanation)
+                            }
+                        )
+                    }
                     findNavController().popBackStack()
                 } else {
                     val args = Bundle().apply {

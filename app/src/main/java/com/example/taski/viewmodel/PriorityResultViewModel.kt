@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.taski.TaskiApplication
 import com.example.taski.data.entity.Task
+import com.example.taski.priority.PriorityExplanation
+import com.example.taski.priority.PriorityExplainer
 import com.example.taski.priority.PriorityResult
 import kotlinx.coroutines.launch
 
@@ -27,9 +29,11 @@ class PriorityResultViewModel(application: Application) : AndroidViewModel(appli
             _uiState.value = if (task == null) {
                 UiState.NotFound
             } else {
+                val priority = repository.explainPriority(task)
                 UiState.Ready(
                     task = task,
-                    priority = repository.explainPriority(task)
+                    priority = priority,
+                    explanation = PriorityExplainer.explain(task, priority)
                 )
             }
         }
@@ -40,7 +44,8 @@ class PriorityResultViewModel(application: Application) : AndroidViewModel(appli
         data object NotFound : UiState()
         data class Ready(
             val task: Task,
-            val priority: PriorityResult
+            val priority: PriorityResult,
+            val explanation: PriorityExplanation
         ) : UiState()
     }
 }

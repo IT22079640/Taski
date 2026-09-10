@@ -310,6 +310,67 @@
                             android:orientation="vertical" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.Taski.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/details_ai_brand"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:text="@string/priority_why_title" />
+
+                        <TextView
+                            android:id="@+id/text_ai_why"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            tools:text="This task is highly prioritized because its deadline is approaching." />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_lg"
+                            android:text="@string/priority_recommendation_title" />
+
+                        <TextView
+                            android:id="@+id/text_ai_recommendation_title"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            tools:text="Start this task today." />
+
+                        <TextView
+                            android:id="@+id/text_ai_recommendation_body"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            tools:text="Its deadline and importance make it a higher priority than your other pending tasks." />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>

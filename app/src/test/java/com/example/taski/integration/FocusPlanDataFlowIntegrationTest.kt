@@ -5,6 +5,7 @@ import com.example.taski.data.database.TaskiDatabase
 import com.example.taski.data.entity.Importance
 import com.example.taski.data.repository.TaskRepository
 import com.example.taski.plan.FocusPlanBuilder
+import com.example.taski.plan.FocusRecommendationBuilder
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -82,6 +83,10 @@ class FocusPlanDataFlowIntegrationTest {
         assertTrue(plan.selectedTasks.none { it.id == lowId })
         assertEquals(120, plan.totalPlannedMinutes)
         assertTrue(!plan.exceedsAvailableTime)
+
+        val recommendation = FocusRecommendationBuilder.from(plan)
+        assertEquals(highId, recommendation.recommendedTask?.id)
+        assertEquals(plan.selectedTasks.map { it.id }, recommendation.orderedTasks.map { it.id })
     }
 
     @Test

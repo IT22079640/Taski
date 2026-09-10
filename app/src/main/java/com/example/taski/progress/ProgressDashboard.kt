@@ -12,7 +12,8 @@ data class ProgressDashboard(
     val todayFocusMillis: Long,
     val streakDays: Int,
     val recentCompletedTasks: List<Task>,
-    val recentFocusSessions: List<FocusSessionWithTask>
+    val recentFocusSessions: List<FocusSessionWithTask>,
+    val insight: ProductivityInsight
 ) {
     val hasCompletedTasks: Boolean get() = completedTasks > 0
     val hasFocusSessions: Boolean get() = recentFocusSessions.isNotEmpty() || completedFocusSessions > 0 || totalFocusMillis > 0
