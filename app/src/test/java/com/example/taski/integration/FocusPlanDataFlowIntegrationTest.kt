@@ -76,7 +76,11 @@ class FocusPlanDataFlowIntegrationTest {
         repository.setCompleted(doneId, true)
 
         val stored = repository.observeAllByPriority().awaitFirst()
-        val plan = FocusPlanBuilder.build(stored, availableMinutes = 120)
+        val plan = FocusPlanBuilder.build(
+            stored,
+            availableMinutes = 120,
+            nowMillis = now
+        )
 
         assertTrue(plan.selectedTasks.none { it.id == doneId || it.completed })
         assertEquals(listOf(highId, mediumId), plan.selectedTasks.map { it.id })
@@ -110,7 +114,11 @@ class FocusPlanDataFlowIntegrationTest {
         )
 
         val stored = repository.getIncomplete()
-        val plan = FocusPlanBuilder.build(stored, availableMinutes = 30)
+        val plan = FocusPlanBuilder.build(
+            stored,
+            availableMinutes = 30,
+            nowMillis = now
+        )
 
         assertEquals(listOf(longHighId), plan.selectedTasks.map { it.id })
         assertTrue(plan.exceedsAvailableTime)

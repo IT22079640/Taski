@@ -35,6 +35,10 @@ class PlanViewModel(application: Application) : AndroidViewModel(application) {
     fun currentAvailableMinutes(): Int =
         _availableMinutes.value ?: FocusPlanBuilder.DEFAULT_AVAILABLE_MINUTES
 
+    fun generatePlan() {
+        rebuild()
+    }
+
     private fun rebuild() {
         val tasks = pendingTasks.value ?: return
         val available = currentAvailableMinutes()

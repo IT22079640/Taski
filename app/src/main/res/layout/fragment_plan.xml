@@ -27,7 +27,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plan_title"
+        app:layout_constraintTop_toBottomOf="@id/card_available_time"
         app:strokeColor="@color/primary"
         tools:visibility="visible">
 
@@ -73,10 +73,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_xs"
+                    android:ellipsize="end"
+                    android:maxLines="2"
                     android:textColor="@color/text_primary"
                     tools:text="Database Assignment" />
 
                 <TextView
+                    android:id="@+id/text_recommend_priority"
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:textColor="@color/text_primary"
+                    tools:text="High priority · Score 85" />
+
+                <TextView
+                    android:id="@+id/text_recommend_deadline"
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    tools:text="Deadline: 11 Sep 2026" />
+
+                <TextView
+                    android:id="@+id/text_recommend_effort"
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    tools:text="Estimated effort: 30m" />
+
+                <TextView
+                    android:id="@+id/text_recommend_why_label"
                     style="@style/TextAppearance.Taski.Caption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -259,10 +287,10 @@
         style="@style/Widget.Taski.Card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_md"
+        android:layout_marginTop="@dimen/spacing_lg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_summary">
+        app:layout_constraintTop_toBottomOf="@id/plan_title">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -286,10 +314,19 @@
                 app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_time_30m"
+                    style="@style/Widget.Taski.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/chip_min_height"
+                    android:text="@string/plan_time_30m" />
+
+                <com.google.android.material.chip.Chip
                     android:id="@+id/chip_time_1h"
                     style="@style/Widget.Taski.Chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:minHeight="@dimen/chip_min_height"
                     android:text="@string/plan_time_1h" />
 
@@ -298,7 +335,6 @@
                     style="@style/Widget.Taski.Chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
                     android:minHeight="@dimen/chip_min_height"
                     android:text="@string/plan_time_2h" />
 
@@ -318,6 +354,15 @@
                     android:minHeight="@dimen/chip_min_height"
                     android:text="@string/plan_time_custom" />
             </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_generate_plan"
+                style="@style/Widget.Taski.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:minHeight="@dimen/button_height"
+                android:text="@string/plan_generate" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -332,7 +377,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_available_time"
+        app:layout_constraintTop_toBottomOf="@id/card_summary"
         tools:listitem="@layout/item_plan_task" />
 
     <LinearLayout
@@ -346,7 +391,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_available_time"
+        app:layout_constraintTop_toBottomOf="@id/card_summary"
         tools:visibility="visible">
 
         <FrameLayout
@@ -390,7 +435,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_available_time">
+        app:layout_constraintTop_toBottomOf="@id/card_summary">
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"

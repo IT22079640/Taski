@@ -16,6 +16,7 @@ import com.example.taski.R
 import com.example.taski.plan.FocusPlan
 import com.example.taski.plan.FocusPlanBuilder
 import com.example.taski.plan.FocusRecommendation
+import com.example.taski.priority.PriorityLevel
 import com.example.taski.ui.focus.FocusFragment
 import com.example.taski.ui.tasks.TaskDetailsFragment
 import com.example.taski.utils.DateUtils
@@ -53,6 +54,8 @@ class PlanFragment : Fragment() {
         chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             if (suppressChipCallback) return@setOnCheckedStateChangeListener
             when (checkedIds.firstOrNull()) {
+                R.id.chip_time_30m ->
+                    viewModel.setAvailableMinutes(FocusPlanBuilder.PRESET_THIRTY_MINUTES)
                 R.id.chip_time_1h ->
                     viewModel.setAvailableMinutes(FocusPlanBuilder.PRESET_ONE_HOUR_MINUTES)
                 R.id.chip_time_2h ->
@@ -75,6 +78,9 @@ class PlanFragment : Fragment() {
             val ready = viewModel.uiState.value as? PlanViewModel.UiState.Ready ?: return@setOnClickListener
             val taskId = ready.recommendation.recommendedTask?.id ?: return@setOnClickListener
             openFocus(taskId)
+        }
+        view.findViewById<MaterialButton>(R.id.btn_generate_plan).setOnClickListener {
+            viewModel.generatePlan()
         }
 
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
@@ -130,10 +136,30 @@ class PlanFragment : Fragment() {
         if (recommendation.isCaughtUp) return
 
         val task = recommendation.recommendedTask ?: return
+        val level = PriorityLevel.fromScore(task.priorityScore)
         view.findViewById<TextView>(R.id.text_recommend_title).text = task.title
-        view.findViewById<TextView>(R.id.text_recommend_why).text = recommendation.whySummary
-        view.findViewById<View>(R.id.text_recommend_overflow).isVisible =
-            recommendation.state == FocusRecommendation.State.OVERFLOW
+        view.findViewById<TextView>(R.id.text_recommend_priority).text = getString(
+            R.string.plan_recommend_priority,
+            levelLabel(level),
+            task.priorityScore
+        )
+        view.findViewById<TextView>(R.id.text_recommend_deadline).text = getString(
+            R.string.plan_recommend_deadline,
+            DateUtils.formatDisplay(task.deadline)
+        )
+        view.findViewById<TextView>(R.id.text_recommend_effort).text = getString(
+            R.string.plan_recommend_effort,
+            DateUtils.formatEffortHours(task.estimatedEffort)
+        )
+        val overflow = recommendation.state == FocusRecommendation.State.OVERFLOW
+        val overflowView = view.findViewById<TextView>(R.id.text_recommend_overflow)
+        overflowView.isVisible = overflow
+        overflowView.text = recommendation.whySummary
+        view.findViewById<View>(R.id.text_recommend_why_label).isVisible = !overflow
+        view.findViewById<TextView>(R.id.text_recommend_why).isVisible = !overflow
+        if (!overflow) {
+            view.findViewById<TextView>(R.id.text_recommend_why).text = recommendation.whySummary
+        }
 
         val orderContainer = view.findViewById<LinearLayout>(R.id.container_recommend_order)
         orderContainer.removeAllViews()
@@ -154,6 +180,7 @@ class PlanFragment : Fragment() {
 
     private fun bindTimeChips(chipGroup: ChipGroup, chipCustom: Chip, minutes: Int) {
         val chipId = when (minutes) {
+            FocusPlanBuilder.PRESET_THIRTY_MINUTES -> R.id.chip_time_30m
             FocusPlanBuilder.PRESET_ONE_HOUR_MINUTES -> R.id.chip_time_1h
             FocusPlanBuilder.PRESET_TWO_HOURS_MINUTES -> R.id.chip_time_2h
             FocusPlanBuilder.PRESET_FOUR_HOURS_MINUTES -> R.id.chip_time_4h
@@ -221,5 +248,11 @@ class PlanFragment : Fragment() {
     private fun openFocus(taskId: Long) {
         val args = Bundle().apply { putLong(FocusFragment.ARG_TASK_ID, taskId) }
         findNavController().navigate(R.id.focusFragment, args)
+    }
+
+    private fun levelLabel(level: PriorityLevel): String = when (level) {
+        PriorityLevel.HIGH -> getString(R.string.priority_level_high)
+        PriorityLevel.MEDIUM -> getString(R.string.priority_level_medium)
+        PriorityLevel.LOW -> getString(R.string.priority_level_low)
     }
 }

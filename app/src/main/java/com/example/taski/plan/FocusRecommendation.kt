@@ -1,7 +1,8 @@
 package com.example.taski.plan
 
-import com.example.taski.data.entity.Importance
 import com.example.taski.data.entity.Task
+import com.example.taski.priority.PriorityExplainer
+import com.example.taski.priority.PriorityLevel
 import com.example.taski.progress.LocalDates
 import com.example.taski.utils.DateUtils
 import java.util.TimeZone
@@ -37,17 +38,49 @@ object FocusRecommendationBuilder {
             )
         }
         val recommended = plan.selectedTasks.first()
-        val state = if (plan.exceedsAvailableTime) {
-            FocusRecommendation.State.OVERFLOW
-        } else {
-            FocusRecommendation.State.RECOMMENDED
-        }
+        val overflow = plan.exceedsAvailableTime
         return FocusRecommendation(
-            state = state,
+            state = if (overflow) {
+                FocusRecommendation.State.OVERFLOW
+            } else {
+                FocusRecommendation.State.RECOMMENDED
+            },
             recommendedTask = recommended,
-            whySummary = whySummary(recommended, nowMillis, timeZone),
+            whySummary = if (overflow) {
+                overflowExplanation(plan.availableMinutes)
+            } else {
+                whyRecommended(recommended, plan.availableMinutes, nowMillis, timeZone)
+            },
             orderedTasks = plan.selectedTasks
         )
+    }
+
+    fun overflowExplanation(availableMinutes: Int): String =
+        "No tasks fit within ${FocusPlanBuilder.windowLabel(availableMinutes)}. " +
+            "Taski recommends your highest-priority pending task."
+
+    internal fun whyRecommended(
+        task: Task,
+        availableMinutes: Int,
+        nowMillis: Long,
+        timeZone: TimeZone
+    ): String {
+        val level = PriorityLevel.fromScore(task.priorityScore)
+        val days = LocalDates.calendarDaysUntil(task.deadline, nowMillis, timeZone)
+        val priorityBit = when (level) {
+            PriorityLevel.HIGH -> "it is high priority"
+            PriorityLevel.MEDIUM -> "it is medium priority"
+            PriorityLevel.LOW -> "it is lower priority"
+        }
+        val deadlineBit = when {
+            days < 0 -> "overdue"
+            days == 0 -> "due today"
+            days == 1 -> "due tomorrow"
+            days in 2..3 -> "due soon"
+            else -> "due later"
+        }
+        val fitBit = "fits your ${FocusPlanBuilder.windowAdjective(availableMinutes)} focus window"
+        return "Recommended because ${PriorityExplainer.joinAnd(listOf(priorityBit, deadlineBit, fitBit))}."
     }
 
     internal fun whySummary(
@@ -63,12 +96,6 @@ object FocusRecommendationBuilder {
             days <= 7 -> "Due in $days days"
             else -> "Deadline further out"
         }
-        val importance = when (task.importance) {
-            Importance.HIGH -> "High importance"
-            Importance.MEDIUM -> "Medium importance"
-            Importance.LOW -> "Low importance"
-        }
-        val effort = "${DateUtils.formatEffortHours(task.estimatedEffort)} estimated effort"
-        return "$deadline • $importance • $effort"
+        return "$deadline • ${DateUtils.formatEffortHours(task.estimatedEffort)} estimated effort"
     }
 }
