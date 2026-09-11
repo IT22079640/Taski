@@ -98,6 +98,28 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_time"
+                        style="@style/Widget.Taski.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_md"
+                        android:hint="@string/task_time_required"
+                        app:endIconContentDescription="@string/task_time"
+                        app:endIconDrawable="@drawable/ic_clock"
+                        app:endIconMode="custom"
+                        app:helperText="@string/task_reminder_helper">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:minHeight="@dimen/touch_target_min" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_effort"
                         style="@style/Widget.Taski.TextInput"
                         android:layout_width="match_parent"

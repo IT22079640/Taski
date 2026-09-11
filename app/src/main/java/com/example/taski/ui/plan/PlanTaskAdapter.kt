@@ -49,7 +49,7 @@ class PlanTaskAdapter(
             textLevel.setTextColor(ContextCompat.getColor(context, levelColor(level)))
             textDeadline.text = context.getString(
                 R.string.plan_deadline,
-                DateUtils.formatDisplay(task.deadline)
+                DateUtils.formatDateTime(task.deadline)
             )
             textEffort.text = context.getString(
                 R.string.plan_effort,

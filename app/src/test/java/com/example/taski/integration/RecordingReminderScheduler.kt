@@ -1,6 +1,7 @@
 package com.example.taski.integration
 
 import com.example.taski.data.entity.Task
+import com.example.taski.reminder.ReminderPlanner
 import com.example.taski.reminder.TaskReminderScheduler
 
 class RecordingReminderScheduler : TaskReminderScheduler {
@@ -8,7 +9,15 @@ class RecordingReminderScheduler : TaskReminderScheduler {
     val cancelledIds = mutableListOf<Long>()
 
     override fun schedule(task: Task) {
-        scheduledTasks += task
+        cancel(task.id)
+        val plan = ReminderPlanner.plan(
+            deadlineMillis = task.deadline,
+            nowMillis = System.currentTimeMillis(),
+            completed = task.completed
+        )
+        if (plan.hasAlarms) {
+            scheduledTasks += task
+        }
     }
 
     override fun cancel(taskId: Long) {

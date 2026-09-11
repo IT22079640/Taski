@@ -132,7 +132,7 @@ class TaskDetailsFragment : Fragment() {
         )
 
         view.findViewById<TextView>(R.id.text_deadline).text =
-            getString(R.string.priority_deadline_value, DateUtils.formatDisplay(task.deadline))
+            getString(R.string.priority_deadline_value, DateUtils.formatDateTime(task.deadline))
         view.findViewById<TextView>(R.id.text_importance).text =
             getString(R.string.priority_importance_value, ImportanceLabels.toLabel(task.importance))
         view.findViewById<TextView>(R.id.text_effort).text =

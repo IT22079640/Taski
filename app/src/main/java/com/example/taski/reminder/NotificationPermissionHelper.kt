@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.example.taski.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -20,6 +21,11 @@ object NotificationPermissionHelper {
             context,
             Manifest.permission.POST_NOTIFICATIONS
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    fun canPostNotifications(context: Context): Boolean {
+        return hasNotificationPermission(context) &&
+            NotificationManagerCompat.from(context).areNotificationsEnabled()
     }
 
     fun maybePrompt(

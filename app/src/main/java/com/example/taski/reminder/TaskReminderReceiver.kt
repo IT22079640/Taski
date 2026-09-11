@@ -12,9 +12,6 @@ class TaskReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action != AlarmTaskReminderScheduler.ACTION_DEADLINE_REMINDER) return
         val taskId = intent.getLongExtra(AlarmTaskReminderScheduler.EXTRA_TASK_ID, 0L)
-        val kind = intent.getStringExtra(AlarmTaskReminderScheduler.EXTRA_KIND)
-            ?.let { runCatching { ReminderKind.valueOf(it) }.getOrNull() }
-            ?: return
         if (taskId <= 0L) return
 
         val pending = goAsync()
@@ -24,12 +21,15 @@ class TaskReminderReceiver : BroadcastReceiver() {
                 val task = app.taskRepository.getById(taskId)
                 if (task == null || task.completed) return@launch
                 val now = System.currentTimeMillis()
-                if (kind == ReminderKind.OVERDUE && task.deadline > now) return@launch
-                if (kind == ReminderKind.UPCOMING && task.deadline <= now) return@launch
-                DeadlineNotificationPoster.show(context.applicationContext, task, kind)
+                if (task.deadline > now + EARLY_WINDOW_MS) return@launch
+                DeadlineNotificationPoster.show(context.applicationContext, task)
             } finally {
                 pending.finish()
             }
         }
+    }
+
+    private companion object {
+        const val EARLY_WINDOW_MS = 2 * 60 * 1000L
     }
 }

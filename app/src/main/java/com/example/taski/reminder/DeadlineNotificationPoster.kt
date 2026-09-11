@@ -11,7 +11,6 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.taski.MainActivity
 import com.example.taski.R
 import com.example.taski.data.entity.Task
-import com.example.taski.utils.DateUtils
 
 object DeadlineNotificationPoster {
     const val CHANNEL_ID = "taski_deadline_reminders"
@@ -29,25 +28,18 @@ object DeadlineNotificationPoster {
         manager.createNotificationChannel(channel)
     }
 
-    fun show(context: Context, task: Task, kind: ReminderKind) {
+    fun show(context: Context, task: Task) {
         ensureChannel(context)
-        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return
+        if (!NotificationPermissionHelper.canPostNotifications(context)) return
 
-        val deadlineText = DateUtils.formatDisplay(task.deadline)
-        val title = when (kind) {
-            ReminderKind.UPCOMING -> context.getString(R.string.notification_upcoming_title, task.title)
-            ReminderKind.OVERDUE -> context.getString(R.string.notification_overdue_title, task.title)
-        }
-        val text = when (kind) {
-            ReminderKind.UPCOMING -> context.getString(R.string.notification_upcoming_body, deadlineText)
-            ReminderKind.OVERDUE -> context.getString(R.string.notification_overdue_body, deadlineText)
-        }
+        val title = context.getString(R.string.notification_due_title)
+        val text = context.getString(R.string.notification_due_body, task.title)
         val tapIntent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         val contentIntent = PendingIntent.getActivity(
             context,
-            ReminderIds.notificationId(task.id, kind),
+            ReminderIds.notificationId(task.id, ReminderKind.DUE),
             tapIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -58,19 +50,13 @@ object DeadlineNotificationPoster {
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setAutoCancel(true)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
-            .setPriority(
-                if (kind == ReminderKind.OVERDUE) {
-                    NotificationCompat.PRIORITY_HIGH
-                } else {
-                    NotificationCompat.PRIORITY_DEFAULT
-                }
-            )
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(contentIntent)
             .build()
 
         try {
             NotificationManagerCompat.from(context).notify(
-                ReminderIds.notificationId(task.id, kind),
+                ReminderIds.notificationId(task.id, ReminderKind.DUE),
                 notification
             )
         } catch (_: SecurityException) {

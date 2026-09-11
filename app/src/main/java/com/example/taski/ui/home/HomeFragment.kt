@@ -109,7 +109,7 @@ class HomeFragment : Fragment() {
             row.findViewById<TextView>(R.id.text_title).text = task.title
             row.findViewById<TextView>(R.id.text_meta).text = getString(
                 R.string.home_priority_meta,
-                DateUtils.formatDisplay(task.deadline),
+                DateUtils.formatDateTime(task.deadline),
                 ImportanceLabels.toLabel(task.importance),
                 task.priorityScore
             )

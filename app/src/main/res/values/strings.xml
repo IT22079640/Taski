@@ -49,6 +49,10 @@
     <string name="task_description_optional">Optional notes for this task</string>
     <string name="task_deadline">Deadline</string>
     <string name="task_deadline_required">Deadline (required)</string>
+    <string name="task_time">Time</string>
+    <string name="task_time_required">Time (required)</string>
+    <string name="task_reminder_helper">Taski schedules a local reminder at this date and time.</string>
+    <string name="task_reminder_disabled_helper">Notifications are off, so Taski cannot show the reminder. Saving the task still works.</string>
     <string name="task_effort_required">Estimated effort in hours (required)</string>
     <string name="task_importance_required">Importance (required)</string>
     <string name="task_category_required">Category (required)</string>
@@ -215,8 +219,9 @@
     <string name="profile_settings_title">On this device</string>
     <string name="profile_offline_title">Offline storage</string>
     <string name="profile_offline_body">Tasks, focus sessions, and progress stay on this phone. Taski does not use an account or cloud sync.</string>
-    <string name="profile_reminders_title">Deadline reminders</string>
-    <string name="profile_reminders_body">Upcoming and overdue reminders are scheduled locally. You can keep using Taski if notifications are turned off.</string>
+    <string name="profile_reminders_title">Task reminders</string>
+    <string name="profile_reminders_body">When you save a task, Taski schedules a local notification for its deadline date and time. You can keep using Taski if notifications are turned off.</string>
+    <string name="profile_reminders_disabled_body">Notifications are disabled on this device. Tasks still save, but deadline reminders cannot appear until notifications are allowed in system settings.</string>
     <string name="profile_about_title">About Taski</string>
     <string name="profile_about_body">Taski is an offline productivity app for university students and young professionals. Plan tasks, focus locally, and track progress — no account required.</string>
 
@@ -255,14 +260,12 @@
     <string name="priority_importance_value">Importance: %1$s</string>
     <string name="priority_effort_value">Estimated effort: %1$s</string>
 
-    <string name="notification_channel_name">Task deadline reminders</string>
-    <string name="notification_channel_description">Local reminders for upcoming and overdue Taski deadlines.</string>
-    <string name="notification_upcoming_title">Upcoming: %1$s</string>
-    <string name="notification_upcoming_body">Deadline is %1$s. This is an upcoming reminder.</string>
-    <string name="notification_overdue_title">Overdue: %1$s</string>
-    <string name="notification_overdue_body">This task was due %1$s and is still incomplete.</string>
-    <string name="notification_permission_title">Deadline reminders</string>
-    <string name="notification_permission_body">Taski can send local reminders on this device for upcoming and overdue deadlines. Nothing is sent to the cloud, and you can keep using Taski if you choose not to allow notifications.</string>
+    <string name="notification_channel_name">Task Reminders</string>
+    <string name="notification_channel_description">Local reminders at each task\'s deadline date and time.</string>
+    <string name="notification_due_title">Taski reminder</string>
+    <string name="notification_due_body">%1$s is due now.</string>
+    <string name="notification_permission_title">Task reminders</string>
+    <string name="notification_permission_body">Taski can send a local reminder at each task deadline. Nothing is sent to the cloud, and you can keep using Taski if you choose not to allow notifications.</string>
     <string name="notification_permission_allow">Allow</string>
     <string name="notification_permission_not_now">Not now</string>
 </resources>

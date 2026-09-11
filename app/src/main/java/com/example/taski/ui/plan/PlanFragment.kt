@@ -145,7 +145,7 @@ class PlanFragment : Fragment() {
         )
         view.findViewById<TextView>(R.id.text_recommend_deadline).text = getString(
             R.string.plan_recommend_deadline,
-            DateUtils.formatDisplay(task.deadline)
+            DateUtils.formatDateTime(task.deadline)
         )
         view.findViewById<TextView>(R.id.text_recommend_effort).text = getString(
             R.string.plan_recommend_effort,

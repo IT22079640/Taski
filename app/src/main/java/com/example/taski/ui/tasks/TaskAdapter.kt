@@ -46,7 +46,7 @@ class TaskAdapter(
             textMeta.text = context.getString(
                 R.string.task_meta,
                 task.category,
-                DateUtils.formatDisplay(task.deadline),
+                DateUtils.formatDateTime(task.deadline),
                 DateUtils.formatEffortHours(task.estimatedEffort)
             )
             textImportance.text = if (task.completed) {

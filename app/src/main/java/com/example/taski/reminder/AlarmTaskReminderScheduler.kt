@@ -17,13 +17,12 @@ class AlarmTaskReminderScheduler(
     override fun schedule(task: Task) {
         cancel(task.id)
         if (task.id <= 0L || task.completed) return
-        val plan = ReminderPlanner.plan(
+        val triggerAt = ReminderPlanner.triggerAt(
             deadlineMillis = task.deadline,
             nowMillis = System.currentTimeMillis(),
             completed = false
-        )
-        plan.upcomingAt?.let { setAlarm(it, task.id, ReminderKind.UPCOMING) }
-        plan.overdueAt?.let { setAlarm(it, task.id, ReminderKind.OVERDUE) }
+        ) ?: return
+        setAlarm(triggerAt, task.id, ReminderKind.DUE)
     }
 
     override fun cancel(taskId: Long) {

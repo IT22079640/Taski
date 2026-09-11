@@ -11,10 +11,12 @@ import com.example.taski.data.dao.FocusSessionDao
 import com.example.taski.data.dao.TaskDao
 import com.example.taski.data.entity.FocusSession
 import com.example.taski.data.entity.Task
+import com.example.taski.utils.DateUtils
+import java.util.TimeZone
 
 @Database(
     entities = [Task::class, FocusSession::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -31,6 +33,27 @@ abstract class TaskiDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                val timeZone = TimeZone.getDefault()
+                db.query("SELECT id, deadline FROM tasks").use { cursor ->
+                    val idIndex = cursor.getColumnIndex("id")
+                    val deadlineIndex = cursor.getColumnIndex("deadline")
+                    while (cursor.moveToNext()) {
+                        val id = cursor.getLong(idIndex)
+                        val deadline = cursor.getLong(deadlineIndex)
+                        val migrated = DateUtils.withDefaultEveningIfDateOnly(deadline, timeZone)
+                        if (migrated != deadline) {
+                            db.execSQL(
+                                "UPDATE tasks SET deadline = ? WHERE id = ?",
+                                arrayOf(migrated, id)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         @Volatile
         private var INSTANCE: TaskiDatabase? = null
 
@@ -41,7 +64,7 @@ abstract class TaskiDatabase : RoomDatabase() {
                     TaskiDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                     .also { INSTANCE = it }
             }
