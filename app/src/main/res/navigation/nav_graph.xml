@@ -139,6 +139,10 @@
                 android:name="taskId"
                 app:argType="long"
                 android:defaultValue="0L" />
+            <argument
+                android:name="plannedDurationMinutes"
+                app:argType="integer"
+                android:defaultValue="0" />
         </fragment>
     </navigation>
 </navigation>

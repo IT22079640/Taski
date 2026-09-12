@@ -11,4 +11,6 @@
     <color name="outline">#334155</color>
     <color name="nav_unselected">#94A3B8</color>
     <color name="completed_text">#94A3B8</color>
+    <color name="plan_urgent_background">#3A2424</color>
+    <color name="plan_urgent_stroke">#7F1D1D</color>
 </resources>

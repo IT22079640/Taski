@@ -9,6 +9,7 @@ import com.example.taski.plan.FocusRecommendationBuilder
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -94,7 +95,7 @@ class FocusPlanDataFlowIntegrationTest {
     }
 
     @Test
-    fun planFromPersistedTasks_fallsBackWhenNothingFits() = runBlocking {
+    fun planFromPersistedTasks_doesNotExceedCapacityWhenNothingFits() = runBlocking {
         val now = System.currentTimeMillis()
         val longHighId = repository.insert(
             sampleTask(
@@ -120,8 +121,10 @@ class FocusPlanDataFlowIntegrationTest {
             nowMillis = now
         )
 
-        assertEquals(listOf(longHighId), plan.selectedTasks.map { it.id })
-        assertTrue(plan.exceedsAvailableTime)
-        assertEquals(240, plan.totalPlannedMinutes)
+        assertTrue(plan.selectedTasks.isEmpty())
+        assertTrue(plan.nothingFits)
+        assertFalse(plan.exceedsAvailableTime)
+        assertEquals(0, plan.totalPlannedMinutes)
+        assertEquals(longHighId, plan.nextOverflowTask?.id)
     }
 }

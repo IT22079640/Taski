@@ -14,6 +14,7 @@ import androidx.navigation.navOptions
 import com.example.taski.R
 import com.example.taski.focus.FocusTimerEngine
 import com.example.taski.focus.FocusTimerStatus
+import com.example.taski.plan.FocusPlanBuilder
 import com.example.taski.viewmodel.FocusViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
@@ -39,7 +40,8 @@ class FocusFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val taskId = arguments?.getLong(ARG_TASK_ID, 0L) ?: 0L
-        viewModel.load(taskId)
+        val plannedMinutes = arguments?.getInt(ARG_PLANNED_DURATION_MINUTES, 0) ?: 0
+        viewModel.load(taskId, plannedMinutes)
 
         view.findViewById<MaterialToolbar>(R.id.focus_toolbar)
             .setNavigationOnClickListener { findNavController().popBackStack() }
@@ -95,6 +97,16 @@ class FocusFragment : Fragment() {
         view.findViewById<TextView>(R.id.text_task_title).text = state.task.title
         view.findViewById<TextView>(R.id.text_countdown).text = state.remainingLabel
         view.findViewById<TextView>(R.id.text_session_status).text = statusLabel(state)
+        val plannedLabel = view.findViewById<TextView>(R.id.text_planned_label)
+        val plannedValue = view.findViewById<TextView>(R.id.text_planned_value)
+        plannedLabel.isVisible = state.plannedSession
+        plannedValue.isVisible = state.plannedSession
+        if (state.plannedSession) {
+            plannedValue.text = getString(
+                R.string.focus_planned_time_value,
+                FocusPlanBuilder.windowLabel(state.plannedMinutes)
+            )
+        }
         view.findViewById<CircularProgressIndicator>(R.id.timer_progress).apply {
             max = FocusTimerEngine.PROGRESS_MAX
             setProgressCompat(state.progress, true)
@@ -222,5 +234,6 @@ class FocusFragment : Fragment() {
 
     companion object {
         const val ARG_TASK_ID = "taskId"
+        const val ARG_PLANNED_DURATION_MINUTES = "plannedDurationMinutes"
     }
 }

@@ -30,7 +30,7 @@ class FocusViewModel(
     private var loadedTaskId: Long = 0L
     private var task: Task? = null
 
-    private var totalMillis: Long = savedStateHandle[KEY_TOTAL] ?: FocusTimerEngine.DEFAULT_DURATION_MS
+    private var totalMillis: Long = savedStateHandle[KEY_TOTAL] ?: defaultDurationMillis()
     private var remainingMillis: Long = savedStateHandle[KEY_REMAINING] ?: totalMillis
     private var status: FocusTimerStatus = savedStateHandle.get<String>(KEY_STATUS)
         ?.let { runCatching { FocusTimerStatus.valueOf(it) }.getOrNull() }
@@ -54,7 +54,18 @@ class FocusViewModel(
         }
     }
 
-    fun load(taskId: Long) {
+    fun load(taskId: Long, plannedMinutes: Int = 0) {
+        if (plannedMinutes > 0) {
+            savedStateHandle[KEY_PLANNED_MINUTES] = plannedMinutes
+            if (status == FocusTimerStatus.Idle && !savedStateHandle.contains(KEY_TOTAL)) {
+                val millis = defaultDurationMillis()
+                if (totalMillis != millis) {
+                    totalMillis = millis
+                    remainingMillis = millis
+                    task?.let { publishReady(it) }
+                }
+            }
+        }
         savedStateHandle[KEY_TASK_ID] = taskId
         if (taskId <= 0L) {
             loadedTaskId = 0L
@@ -261,9 +272,19 @@ class FocusViewModel(
             stopEnabled = FocusTimerEngine.canStop(status),
             durationEnabled = FocusTimerEngine.canChangeDuration(status),
             isResume = status == FocusTimerStatus.Paused,
-            showFinished = status == FocusTimerStatus.Finished
+            showFinished = status == FocusTimerStatus.Finished,
+            plannedSession = plannedMinutes() > 0,
+            plannedMinutes = plannedMinutes()
         )
     }
+
+    private fun defaultDurationMillis(): Long {
+        val planned = FocusTimerEngine.plannedDurationMillis(plannedMinutes())
+        return planned ?: FocusTimerEngine.DEFAULT_DURATION_MS
+    }
+
+    private fun plannedMinutes(): Int =
+        savedStateHandle.get<Int>(KEY_PLANNED_MINUTES) ?: 0
 
     override fun onCleared() {
         cancelTicker()
@@ -287,13 +308,16 @@ class FocusViewModel(
             val stopEnabled: Boolean,
             val durationEnabled: Boolean,
             val isResume: Boolean,
-            val showFinished: Boolean
+            val showFinished: Boolean,
+            val plannedSession: Boolean = false,
+            val plannedMinutes: Int = 0
         ) : UiState()
     }
 
     private companion object {
         const val TICK_MS = 250L
         const val KEY_TASK_ID = "taskId"
+        const val KEY_PLANNED_MINUTES = "plannedDurationMinutes"
         const val KEY_TOTAL = "focus_total_ms"
         const val KEY_REMAINING = "focus_remaining_ms"
         const val KEY_STATUS = "focus_status"

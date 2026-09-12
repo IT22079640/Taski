@@ -24,10 +24,11 @@ class FocusTimerEngineTest {
     fun validateDuration_rejectsOutOfRange() {
         assertFalse(FocusTimerEngine.validateDurationMinutes(0))
         assertFalse(FocusTimerEngine.validateDurationMinutes(-5))
-        assertFalse(FocusTimerEngine.validateDurationMinutes(181))
+        assertFalse(FocusTimerEngine.validateDurationMinutes(241))
         assertTrue(FocusTimerEngine.validateDurationMinutes(1))
         assertTrue(FocusTimerEngine.validateDurationMinutes(25))
         assertTrue(FocusTimerEngine.validateDurationMinutes(180))
+        assertTrue(FocusTimerEngine.validateDurationMinutes(240))
         assertFalse(FocusTimerEngine.validateDurationMillis(0L))
         assertTrue(FocusTimerEngine.validateDurationMillis(FocusTimerEngine.PRESET_50_MS))
     }
@@ -117,6 +118,15 @@ class FocusTimerEngineTest {
         assertEquals(1_700_000_000_000L, session.startTime)
         assertTrue(session.completed)
         assertEquals(0L, session.id)
+    }
+
+    @Test
+    fun plannedDurationMillis_usesPlannerMinutesAndKeepsDefaultWhenMissing() {
+        assertEquals(null, FocusTimerEngine.plannedDurationMillis(0))
+        assertEquals(null, FocusTimerEngine.plannedDurationMillis(-10))
+        assertEquals(45 * 60_000L, FocusTimerEngine.plannedDurationMillis(45))
+        assertEquals(FocusTimerEngine.MAX_DURATION_MS, FocusTimerEngine.plannedDurationMillis(500))
+        assertEquals("45:00", FocusTimerEngine.formatCountdown(FocusTimerEngine.plannedDurationMillis(45)!!))
     }
 
     @Test

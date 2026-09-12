@@ -12,7 +12,7 @@ object FocusTimerEngine {
     const val DEFAULT_DURATION_MS = PRESET_25_MINUTES * 60_000L
     const val PRESET_50_MS = PRESET_50_MINUTES * 60_000L
     const val MIN_DURATION_MINUTES = 1
-    const val MAX_DURATION_MINUTES = 180
+    const val MAX_DURATION_MINUTES = 240
     const val MIN_DURATION_MS = MIN_DURATION_MINUTES * 60_000L
     const val MAX_DURATION_MS = MAX_DURATION_MINUTES * 60_000L
     const val MIN_SAVE_DURATION_MS = 1_000L
@@ -31,6 +31,16 @@ object FocusTimerEngine {
 
     fun validateDurationMillis(millis: Long): Boolean =
         millis in MIN_DURATION_MS..MAX_DURATION_MS
+
+    /**
+     * Converts a planner duration into timer millis. Returns null when the
+     * session should keep the default 25-minute Pomodoro.
+     */
+    fun plannedDurationMillis(plannedMinutes: Int): Long? {
+        if (plannedMinutes <= 0) return null
+        val minutes = plannedMinutes.coerceIn(MIN_DURATION_MINUTES, MAX_DURATION_MINUTES)
+        return minutesToMillis(minutes)
+    }
 
     fun formatCountdown(millis: Long): String {
         val totalSeconds = millis.coerceAtLeast(0L) / 1_000L

@@ -42,13 +42,14 @@ class FocusRecommendationBuilderTest {
         assertEquals(1L, recommendation.recommendedTask?.id)
         assertEquals("Database Assignment", recommendation.recommendedTask?.title)
         assertEquals(plan.selectedTasks.map { it.id }, recommendation.orderedTasks.map { it.id })
-        assertTrue(recommendation.whySummary.contains("high priority"))
+        assertEquals(plan.items.first().plannedMinutes, recommendation.plannedMinutes)
+        assertTrue(recommendation.whySummary.contains("High priority"))
         assertTrue(recommendation.whySummary.contains("due today"))
-        assertTrue(recommendation.whySummary.contains("fits your"))
+        assertTrue(recommendation.whySummary.contains("available focus time"))
     }
 
     @Test
-    fun overflowPlan_explainsFallbackToHighestPriority() {
+    fun nothingFits_doesNotRecommendExceedingCapacity() {
         val highest = task(id = 8, score = 88, effortMinutes = 240, title = "Long lab")
         val next = task(id = 9, score = 70, effortMinutes = 180, title = "Essay")
         val plan = FocusPlanBuilder.build(
@@ -59,11 +60,12 @@ class FocusRecommendationBuilderTest {
         )
         val recommendation = FocusRecommendationBuilder.from(plan, now, utc)
 
-        assertEquals(FocusRecommendation.State.OVERFLOW, recommendation.state)
-        assertEquals(8L, recommendation.recommendedTask?.id)
-        assertEquals(listOf(8L), recommendation.orderedTasks.map { it.id })
+        assertEquals(FocusRecommendation.State.NOTHING_FITS, recommendation.state)
+        assertNull(recommendation.recommendedTask)
+        assertTrue(recommendation.orderedTasks.isEmpty())
+        assertEquals(8L, recommendation.overflowTask?.id)
         assertEquals(
-            "No tasks fit within 1 hour. Taski recommends your highest-priority pending task.",
+            "No more tasks fit within today's available time.",
             recommendation.whySummary
         )
     }
@@ -77,9 +79,9 @@ class FocusRecommendationBuilderTest {
             deadline = now,
             importance = Importance.HIGH
         )
-        val text = FocusRecommendationBuilder.whyRecommended(task, 60, now, utc)
+        val text = FocusRecommendationBuilder.whyRecommended(task, now, utc)
         assertEquals(
-            "Recommended because it is high priority, due today, and fits your 1-hour focus window.",
+            "High priority and due today. It fits your available focus time.",
             text
         )
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,26 +8,40 @@
     android:padding="@dimen/screen_padding"
     tools:context=".ui.plan.PlanFragment">
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
     <TextView
         android:id="@+id/plan_title"
         style="@style/TextAppearance.Taski.ScreenTitle"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/plan_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/plan_title" />
+
+    <TextView
+        android:id="@+id/text_available_today"
+        style="@style/TextAppearance.Taski.Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:textColor="@color/text_primary"
+        tools:text="Your available time today: 2 hours" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_recommendation"
         style="@style/Widget.Taski.Card"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_lg"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_available_time"
         app:strokeColor="@color/primary"
         tools:visibility="visible">
 
@@ -59,7 +73,14 @@
                     android:text="@string/plan_recommend_overflow"
                     android:visibility="gone" />
 
+                <LinearLayout
+                    android:id="@+id/group_recommend_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
                 <TextView
+                    android:id="@+id/text_recommend_start_with"
                     style="@style/TextAppearance.Taski.Caption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -104,6 +125,23 @@
                     tools:text="Estimated effort: 30m" />
 
                 <TextView
+                    android:id="@+id/text_recommend_urgency"
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    tools:text="Due today" />
+
+                <TextView
+                    android:id="@+id/text_recommend_planned"
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/primary"
+                    tools:text="Planned focus: 30 minutes" />
+
+                <TextView
                     android:id="@+id/text_recommend_why_label"
                     style="@style/TextAppearance.Taski.Caption"
                     android:layout_width="match_parent"
@@ -143,6 +181,38 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
                     android:orientation="vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/group_next_recommended"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/TextAppearance.Taski.Subtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/plan_next_recommended" />
+
+                    <TextView
+                        android:id="@+id/text_next_recommended_title"
+                        style="@style/TextAppearance.Taski.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xs"
+                        android:textColor="@color/text_primary"
+                        tools:text="Write literature review" />
+
+                    <TextView
+                        style="@style/TextAppearance.Taski.Caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xs"
+                        android:text="@string/plan_next_recommended_note" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -172,12 +242,9 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_summary"
         style="@style/Widget.Taski.Card"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_lg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_recommendation">
+        android:layout_marginTop="@dimen/spacing_lg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -285,113 +352,121 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_available_time"
         style="@style/Widget.Taski.Card"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_lg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plan_title">
+        android:layout_marginTop="@dimen/spacing_lg">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                style="@style/TextAppearance.Taski.Subtitle"
-                android:layout_width="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_adjust_time"
+                style="@style/Widget.Taski.Button.Text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minHeight="@dimen/touch_target_min"
                 android:text="@string/plan_available_time_label" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_group_time"
+            <LinearLayout
+                android:id="@+id/group_adjust_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                app:chipSpacingHorizontal="@dimen/spacing_sm"
-                app:chipSpacingVertical="@dimen/spacing_sm"
-                app:selectionRequired="true"
-                app:singleSelection="true">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_time_30m"
-                    style="@style/Widget.Taski.Chip"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_time"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/chip_min_height"
-                    android:text="@string/plan_time_30m" />
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    app:chipSpacingHorizontal="@dimen/spacing_sm"
+                    app:chipSpacingVertical="@dimen/spacing_sm"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_time_1h"
-                    style="@style/Widget.Taski.Chip"
-                    android:layout_width="wrap_content"
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_time_30m"
+                        style="@style/Widget.Taski.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/chip_min_height"
+                        android:text="@string/plan_time_30m" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_time_1h"
+                        style="@style/Widget.Taski.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/chip_min_height"
+                        android:text="@string/plan_time_1h" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_time_2h"
+                        style="@style/Widget.Taski.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:minHeight="@dimen/chip_min_height"
+                        android:text="@string/plan_time_2h" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_time_3h"
+                        style="@style/Widget.Taski.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/chip_min_height"
+                        android:text="@string/plan_time_3h" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_time_4h"
+                        style="@style/Widget.Taski.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/chip_min_height"
+                        android:text="@string/plan_time_4h" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_time_custom"
+                        style="@style/Widget.Taski.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/chip_min_height"
+                        android:text="@string/plan_time_custom" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_generate_plan"
+                    style="@style/Widget.Taski.Button.Outlined"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:minHeight="@dimen/chip_min_height"
-                    android:text="@string/plan_time_1h" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_time_2h"
-                    style="@style/Widget.Taski.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/chip_min_height"
-                    android:text="@string/plan_time_2h" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_time_4h"
-                    style="@style/Widget.Taski.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/chip_min_height"
-                    android:text="@string/plan_time_4h" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_time_custom"
-                    style="@style/Widget.Taski.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/chip_min_height"
-                    android:text="@string/plan_time_custom" />
-            </com.google.android.material.chip.ChipGroup>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_generate_plan"
-                style="@style/Widget.Taski.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_md"
-                android:minHeight="@dimen/button_height"
-                android:text="@string/plan_generate" />
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/plan_generate" />
+            </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_plan"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_lg"
         android:clipToPadding="false"
+        android:nestedScrollingEnabled="false"
         android:paddingBottom="@dimen/spacing_lg"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_summary"
         tools:listitem="@layout/item_plan_task" />
 
     <LinearLayout
         android:id="@+id/plan_empty_state"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/spacing_xl"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_summary"
         tools:visibility="visible">
 
         <FrameLayout
@@ -409,6 +484,7 @@
         </FrameLayout>
 
         <TextView
+            android:id="@+id/text_empty_title"
             style="@style/TextAppearance.Taski.Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -417,6 +493,7 @@
             android:text="@string/plan_caught_up_title" />
 
         <TextView
+            android:id="@+id/text_empty_body"
             style="@style/TextAppearance.Taski.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -425,17 +502,16 @@
             android:text="@string/plan_caught_up_body" />
     </LinearLayout>
 
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
     <LinearLayout
         android:id="@+id/plan_loading"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_summary">
+        android:visibility="gone">
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"
@@ -445,4 +521,4 @@
             app:indicatorColor="@color/primary" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

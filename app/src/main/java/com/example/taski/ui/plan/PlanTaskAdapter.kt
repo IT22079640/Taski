@@ -5,20 +5,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taski.R
-import com.example.taski.data.entity.Task
+import com.example.taski.plan.FocusPlanBuilder
+import com.example.taski.plan.PlanUrgency
+import com.example.taski.plan.PlannedTask
 import com.example.taski.priority.PriorityLevel
 import com.example.taski.utils.DateUtils
-import com.example.taski.utils.ImportanceLabels
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 
 class PlanTaskAdapter(
-    private val onOpenTask: (Task) -> Unit,
-    private val onStartFocus: (Task) -> Unit
-) : ListAdapter<Task, PlanTaskAdapter.PlanTaskViewHolder>(DiffCallback) {
+    private val onOpenTask: (PlannedTask) -> Unit,
+    private val onStartFocus: (PlannedTask) -> Unit
+) : ListAdapter<PlannedTask, PlanTaskAdapter.PlanTaskViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanTaskViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -31,38 +34,59 @@ class PlanTaskAdapter(
     }
 
     inner class PlanTaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val card = itemView as MaterialCardView
         private val textTitle = itemView.findViewById<TextView>(R.id.text_title)
-        private val textScore = itemView.findViewById<TextView>(R.id.text_score)
-        private val textLevel = itemView.findViewById<TextView>(R.id.text_priority_level)
+        private val textUrgentBadge = itemView.findViewById<TextView>(R.id.text_urgent_badge)
+        private val textPriorityScore = itemView.findViewById<TextView>(R.id.text_priority_score)
+        private val textUrgency = itemView.findViewById<TextView>(R.id.text_urgency)
         private val textDeadline = itemView.findViewById<TextView>(R.id.text_deadline)
         private val textEffort = itemView.findViewById<TextView>(R.id.text_effort)
-        private val textImportance = itemView.findViewById<TextView>(R.id.text_importance)
+        private val textPlannedFocus = itemView.findViewById<TextView>(R.id.text_planned_focus)
         private val buttonOpen = itemView.findViewById<MaterialButton>(R.id.button_open)
         private val buttonStartFocus = itemView.findViewById<MaterialButton>(R.id.button_start_focus)
 
-        fun bind(task: Task) {
+        fun bind(item: PlannedTask) {
             val context = itemView.context
+            val task = item.task
             val level = PriorityLevel.fromScore(task.priorityScore)
+            val urgent = PlanUrgency.isUrgent(task)
             textTitle.text = task.title
-            textScore.text = context.getString(R.string.plan_score, task.priorityScore)
-            textLevel.text = context.getString(R.string.plan_priority_level, levelLabel(level))
-            textLevel.setTextColor(ContextCompat.getColor(context, levelColor(level)))
+            textPriorityScore.text = context.getString(
+                R.string.plan_priority_score_line,
+                levelLabel(level).uppercase(),
+                task.priorityScore
+            )
+            textPriorityScore.setTextColor(ContextCompat.getColor(context, levelColor(level)))
+            textUrgency.text = PlanUrgency.label(task)
             textDeadline.text = context.getString(
                 R.string.plan_deadline,
                 DateUtils.formatDateTime(task.deadline)
             )
             textEffort.text = context.getString(
                 R.string.plan_effort,
-                DateUtils.formatEffortHours(task.estimatedEffort)
+                FocusPlanBuilder.windowLabel(task.estimatedEffort)
             )
-            textImportance.text = context.getString(
-                R.string.plan_importance,
-                ImportanceLabels.toLabel(task.importance)
+            textPlannedFocus.text = context.getString(
+                R.string.plan_planned_focus_value,
+                FocusPlanBuilder.windowLabel(item.plannedMinutes)
             )
+            textUrgentBadge.isVisible = urgent
+            bindUrgentCard(urgent)
 
-            itemView.setOnClickListener { onOpenTask(task) }
-            buttonOpen.setOnClickListener { onOpenTask(task) }
-            buttonStartFocus.setOnClickListener { onStartFocus(task) }
+            itemView.setOnClickListener { onOpenTask(item) }
+            buttonOpen.setOnClickListener { onOpenTask(item) }
+            buttonStartFocus.setOnClickListener { onStartFocus(item) }
+        }
+
+        private fun bindUrgentCard(urgent: Boolean) {
+            val context = itemView.context
+            if (urgent) {
+                card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.plan_urgent_background))
+                card.strokeColor = ContextCompat.getColor(context, R.color.plan_urgent_stroke)
+            } else {
+                card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.card_background))
+                card.strokeColor = ContextCompat.getColor(context, R.color.outline)
+            }
         }
 
         private fun levelLabel(level: PriorityLevel): String {
@@ -82,11 +106,11 @@ class PlanTaskAdapter(
     }
 
     private companion object {
-        val DiffCallback = object : DiffUtil.ItemCallback<Task>() {
-            override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean =
-                oldItem.id == newItem.id
+        val DiffCallback = object : DiffUtil.ItemCallback<PlannedTask>() {
+            override fun areItemsTheSame(oldItem: PlannedTask, newItem: PlannedTask): Boolean =
+                oldItem.task.id == newItem.task.id
 
-            override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean =
+            override fun areContentsTheSame(oldItem: PlannedTask, newItem: PlannedTask): Boolean =
                 oldItem == newItem
         }
     }

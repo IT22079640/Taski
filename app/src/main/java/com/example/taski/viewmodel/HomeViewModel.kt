@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.taski.TaskiApplication
 import com.example.taski.data.entity.Task
+import com.example.taski.plan.DailyWorkCapacityStore
 import com.example.taski.plan.FocusPlanBuilder
 import com.example.taski.progress.DayRange
 import com.example.taski.progress.LocalDates
@@ -21,28 +22,34 @@ import java.util.TimeZone
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val taskRepository = (application as TaskiApplication).taskRepository
     private val focusSessionRepository = (application as TaskiApplication).focusSessionRepository
+    private val capacityStore = DailyWorkCapacityStore.from(application)
     private val timeZone: TimeZone = TimeZone.getDefault()
     private val todayRange = MutableStateFlow(currentDayRange())
 
     val uiState: LiveData<HomeUiState> = todayRange.flatMapLatest { range ->
         combine(
-            taskRepository.observeIncomplete(),
-            taskRepository.observePendingCount(),
-            taskRepository.observeCompletedCountBetween(range.startInclusive, range.endExclusive),
-            focusSessionRepository.observeSavedDurationBetween(range.startInclusive, range.endExclusive),
-            taskRepository.observeCompletedAtTimes()
-        ) { incomplete, pending, todayCompleted, todayFocus, completionTimes ->
-            val plan = FocusPlanBuilder.build(incomplete, FocusPlanBuilder.DEFAULT_AVAILABLE_MINUTES)
+            combine(
+                taskRepository.observeIncomplete(),
+                taskRepository.observePendingCount(),
+                taskRepository.observeCompletedCountBetween(range.startInclusive, range.endExclusive),
+                focusSessionRepository.observeSavedDurationBetween(range.startInclusive, range.endExclusive),
+                taskRepository.observeCompletedAtTimes()
+            ) { incomplete, pending, todayCompleted, todayFocus, completionTimes ->
+                HomeSnapshot(incomplete, pending, todayCompleted, todayFocus, completionTimes)
+            },
+            capacityStore.minutesFlow()
+        ) { snapshot, capacityMinutes ->
+            val plan = FocusPlanBuilder.build(snapshot.incomplete, capacityMinutes)
             HomeUiState(
-                pendingCount = pending,
-                completedToday = todayCompleted,
-                todayFocusMillis = todayFocus,
+                pendingCount = snapshot.pending,
+                completedToday = snapshot.todayCompleted,
+                todayFocusMillis = snapshot.todayFocus,
                 streakDays = StreakCalculator.currentStreak(
-                    completionTimes = completionTimes,
+                    completionTimes = snapshot.completionTimes,
                     nowMillis = range.startInclusive,
                     timeZone = timeZone
                 ),
-                topTasks = incomplete.take(TOP_TASK_COUNT),
+                topTasks = snapshot.incomplete.take(TOP_TASK_COUNT),
                 planTaskCount = plan.taskCount,
                 planMinutes = plan.totalPlannedMinutes
             )
@@ -55,6 +62,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun currentDayRange(): DayRange =
         LocalDates.dayRangeContaining(System.currentTimeMillis(), timeZone)
+
+    private data class HomeSnapshot(
+        val incomplete: List<Task>,
+        val pending: Int,
+        val todayCompleted: Int,
+        val todayFocus: Long,
+        val completionTimes: List<Long>
+    )
 
     data class HomeUiState(
         val pendingCount: Int,

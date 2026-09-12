@@ -1,7 +1,6 @@
 package com.example.taski.plan
 
 import com.example.taski.data.entity.Task
-import com.example.taski.priority.PriorityExplainer
 import com.example.taski.priority.PriorityLevel
 import com.example.taski.progress.LocalDates
 import com.example.taski.utils.DateUtils
@@ -11,12 +10,14 @@ data class FocusRecommendation(
     val state: State,
     val recommendedTask: Task?,
     val whySummary: String,
-    val orderedTasks: List<Task>
+    val orderedTasks: List<Task>,
+    val plannedMinutes: Int = 0,
+    val overflowTask: Task? = null
 ) {
     enum class State {
         CAUGHT_UP,
         RECOMMENDED,
-        OVERFLOW
+        NOTHING_FITS
     }
 
     val isCaughtUp: Boolean get() = state == State.CAUGHT_UP
@@ -34,43 +35,46 @@ object FocusRecommendationBuilder {
                 state = FocusRecommendation.State.CAUGHT_UP,
                 recommendedTask = null,
                 whySummary = "",
-                orderedTasks = emptyList()
+                orderedTasks = emptyList(),
+                plannedMinutes = 0,
+                overflowTask = null
             )
         }
-        val recommended = plan.selectedTasks.first()
-        val overflow = plan.exceedsAvailableTime
+        val first = plan.items.firstOrNull()
+        if (first == null) {
+            return FocusRecommendation(
+                state = FocusRecommendation.State.NOTHING_FITS,
+                recommendedTask = null,
+                whySummary = nothingFitsExplanation(),
+                orderedTasks = emptyList(),
+                plannedMinutes = 0,
+                overflowTask = plan.nextOverflowTask
+            )
+        }
         return FocusRecommendation(
-            state = if (overflow) {
-                FocusRecommendation.State.OVERFLOW
-            } else {
-                FocusRecommendation.State.RECOMMENDED
-            },
-            recommendedTask = recommended,
-            whySummary = if (overflow) {
-                overflowExplanation(plan.availableMinutes)
-            } else {
-                whyRecommended(recommended, plan.availableMinutes, nowMillis, timeZone)
-            },
-            orderedTasks = plan.selectedTasks
+            state = FocusRecommendation.State.RECOMMENDED,
+            recommendedTask = first.task,
+            whySummary = whyRecommended(first.task, nowMillis, timeZone),
+            orderedTasks = plan.selectedTasks,
+            plannedMinutes = first.plannedMinutes,
+            overflowTask = plan.nextOverflowTask
         )
     }
 
-    fun overflowExplanation(availableMinutes: Int): String =
-        "No tasks fit within ${FocusPlanBuilder.windowLabel(availableMinutes)}. " +
-            "Taski recommends your highest-priority pending task."
+    fun nothingFitsExplanation(): String =
+        "No more tasks fit within today's available time."
 
     internal fun whyRecommended(
         task: Task,
-        availableMinutes: Int,
         nowMillis: Long,
         timeZone: TimeZone
     ): String {
         val level = PriorityLevel.fromScore(task.priorityScore)
         val days = LocalDates.calendarDaysUntil(task.deadline, nowMillis, timeZone)
         val priorityBit = when (level) {
-            PriorityLevel.HIGH -> "it is high priority"
-            PriorityLevel.MEDIUM -> "it is medium priority"
-            PriorityLevel.LOW -> "it is lower priority"
+            PriorityLevel.HIGH -> "High priority"
+            PriorityLevel.MEDIUM -> "Medium priority"
+            PriorityLevel.LOW -> "Lower priority"
         }
         val deadlineBit = when {
             days < 0 -> "overdue"
@@ -79,8 +83,7 @@ object FocusRecommendationBuilder {
             days in 2..3 -> "due soon"
             else -> "due later"
         }
-        val fitBit = "fits your ${FocusPlanBuilder.windowAdjective(availableMinutes)} focus window"
-        return "Recommended because ${PriorityExplainer.joinAnd(listOf(priorityBit, deadlineBit, fitBit))}."
+        return "$priorityBit and $deadlineBit. It fits your available focus time."
     }
 
     internal fun whySummary(

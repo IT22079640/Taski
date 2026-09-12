@@ -16,6 +16,8 @@ import com.example.taski.R
 import com.example.taski.plan.FocusPlan
 import com.example.taski.plan.FocusPlanBuilder
 import com.example.taski.plan.FocusRecommendation
+import com.example.taski.plan.PlanUrgency
+import com.example.taski.plan.PlannedTask
 import com.example.taski.priority.PriorityLevel
 import com.example.taski.ui.focus.FocusFragment
 import com.example.taski.ui.tasks.TaskDetailsFragment
@@ -44,13 +46,17 @@ class PlanFragment : Fragment() {
 
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_plan)
         val adapter = PlanTaskAdapter(
-            onOpenTask = { openDetails(it.id) },
-            onStartFocus = { openFocus(it.id) }
+            onOpenTask = { openDetails(it.task.id) },
+            onStartFocus = { openFocus(it) }
         )
         recycler.adapter = adapter
 
         val chipGroup = view.findViewById<ChipGroup>(R.id.chip_group_time)
         val chipCustom = view.findViewById<Chip>(R.id.chip_time_custom)
+        val adjustGroup = view.findViewById<View>(R.id.group_adjust_time)
+        view.findViewById<MaterialButton>(R.id.btn_adjust_time).setOnClickListener {
+            adjustGroup.isVisible = !adjustGroup.isVisible
+        }
         chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             if (suppressChipCallback) return@setOnCheckedStateChangeListener
             when (checkedIds.firstOrNull()) {
@@ -60,6 +66,8 @@ class PlanFragment : Fragment() {
                     viewModel.setAvailableMinutes(FocusPlanBuilder.PRESET_ONE_HOUR_MINUTES)
                 R.id.chip_time_2h ->
                     viewModel.setAvailableMinutes(FocusPlanBuilder.PRESET_TWO_HOURS_MINUTES)
+                R.id.chip_time_3h ->
+                    viewModel.setAvailableMinutes(FocusPlanBuilder.PRESET_THREE_HOURS_MINUTES)
                 R.id.chip_time_4h ->
                     viewModel.setAvailableMinutes(FocusPlanBuilder.PRESET_FOUR_HOURS_MINUTES)
             }
@@ -76,8 +84,8 @@ class PlanFragment : Fragment() {
         val startRecommended = view.findViewById<MaterialButton>(R.id.btn_recommend_start_focus)
         startRecommended.setOnClickListener {
             val ready = viewModel.uiState.value as? PlanViewModel.UiState.Ready ?: return@setOnClickListener
-            val taskId = ready.recommendation.recommendedTask?.id ?: return@setOnClickListener
-            openFocus(taskId)
+            val first = ready.plan.items.firstOrNull() ?: return@setOnClickListener
+            openFocus(first)
         }
         view.findViewById<MaterialButton>(R.id.btn_generate_plan).setOnClickListener {
             viewModel.generatePlan()
@@ -95,14 +103,32 @@ class PlanFragment : Fragment() {
                 is PlanViewModel.UiState.Ready -> {
                     loading.isVisible = false
                     bindSummary(state.plan, summaryTasks, summaryPlanned, summaryAvailable)
-                    overflowNote.isVisible = state.plan.exceedsAvailableTime
-                    emptyState.isVisible = false
-                    recycler.isVisible = !state.plan.isCaughtUp
-                    adapter.submitList(state.plan.selectedTasks)
+                    view.findViewById<TextView>(R.id.text_available_today).text = getString(
+                        R.string.plan_available_today,
+                        FocusPlanBuilder.windowLabel(state.plan.availableMinutes)
+                    )
+                    overflowNote.isVisible = state.plan.hasLeftoverTasks
+                    val showEmpty = state.plan.isCaughtUp || state.plan.nothingFits
+                    emptyState.isVisible = showEmpty
+                    recycler.isVisible = state.plan.items.isNotEmpty()
+                    bindEmptyState(view, state.plan)
+                    adapter.submitList(state.plan.items)
                     bindTimeChips(chipGroup, chipCustom, state.plan.availableMinutes)
                     bindRecommendation(view, state)
                 }
             }
+        }
+    }
+
+    private fun bindEmptyState(view: View, plan: FocusPlan) {
+        val title = view.findViewById<TextView>(R.id.text_empty_title)
+        val body = view.findViewById<TextView>(R.id.text_empty_body)
+        if (plan.nothingFits) {
+            title.setText(R.string.plan_nothing_fits_title)
+            body.setText(R.string.plan_nothing_fits_body)
+        } else {
+            title.setText(R.string.plan_caught_up_title)
+            body.setText(R.string.plan_caught_up_body)
         }
     }
 
@@ -135,12 +161,27 @@ class PlanFragment : Fragment() {
         taskGroup.isVisible = !recommendation.isCaughtUp
         if (recommendation.isCaughtUp) return
 
+        val nothingFits = recommendation.state == FocusRecommendation.State.NOTHING_FITS
+        val overflowView = view.findViewById<TextView>(R.id.text_recommend_overflow)
+        overflowView.isVisible = nothingFits || state.plan.hasLeftoverTasks
+        overflowView.text = getString(R.string.plan_recommend_overflow)
+        view.findViewById<View>(R.id.group_recommend_selected).isVisible = !nothingFits
+
+        val nextGroup = view.findViewById<View>(R.id.group_next_recommended)
+        val overflowTask = recommendation.overflowTask
+        nextGroup.isVisible = overflowTask != null
+        if (overflowTask != null) {
+            view.findViewById<TextView>(R.id.text_next_recommended_title).text = overflowTask.title
+        }
+
+        if (nothingFits) return
+
         val task = recommendation.recommendedTask ?: return
         val level = PriorityLevel.fromScore(task.priorityScore)
         view.findViewById<TextView>(R.id.text_recommend_title).text = task.title
         view.findViewById<TextView>(R.id.text_recommend_priority).text = getString(
             R.string.plan_recommend_priority,
-            levelLabel(level),
+            levelLabel(level).uppercase(),
             task.priorityScore
         )
         view.findViewById<TextView>(R.id.text_recommend_deadline).text = getString(
@@ -149,17 +190,14 @@ class PlanFragment : Fragment() {
         )
         view.findViewById<TextView>(R.id.text_recommend_effort).text = getString(
             R.string.plan_recommend_effort,
-            DateUtils.formatEffortHours(task.estimatedEffort)
+            FocusPlanBuilder.windowLabel(task.estimatedEffort)
         )
-        val overflow = recommendation.state == FocusRecommendation.State.OVERFLOW
-        val overflowView = view.findViewById<TextView>(R.id.text_recommend_overflow)
-        overflowView.isVisible = overflow
-        overflowView.text = recommendation.whySummary
-        view.findViewById<View>(R.id.text_recommend_why_label).isVisible = !overflow
-        view.findViewById<TextView>(R.id.text_recommend_why).isVisible = !overflow
-        if (!overflow) {
-            view.findViewById<TextView>(R.id.text_recommend_why).text = recommendation.whySummary
-        }
+        view.findViewById<TextView>(R.id.text_recommend_urgency).text = PlanUrgency.label(task)
+        view.findViewById<TextView>(R.id.text_recommend_planned).text = getString(
+            R.string.plan_recommend_planned,
+            FocusPlanBuilder.windowLabel(recommendation.plannedMinutes)
+        )
+        view.findViewById<TextView>(R.id.text_recommend_why).text = recommendation.whySummary
 
         val orderContainer = view.findViewById<LinearLayout>(R.id.container_recommend_order)
         orderContainer.removeAllViews()
@@ -183,6 +221,7 @@ class PlanFragment : Fragment() {
             FocusPlanBuilder.PRESET_THIRTY_MINUTES -> R.id.chip_time_30m
             FocusPlanBuilder.PRESET_ONE_HOUR_MINUTES -> R.id.chip_time_1h
             FocusPlanBuilder.PRESET_TWO_HOURS_MINUTES -> R.id.chip_time_2h
+            FocusPlanBuilder.PRESET_THREE_HOURS_MINUTES -> R.id.chip_time_3h
             FocusPlanBuilder.PRESET_FOUR_HOURS_MINUTES -> R.id.chip_time_4h
             else -> R.id.chip_time_custom
         }
@@ -245,8 +284,11 @@ class PlanFragment : Fragment() {
         findNavController().navigate(R.id.taskDetailsFragment, args)
     }
 
-    private fun openFocus(taskId: Long) {
-        val args = Bundle().apply { putLong(FocusFragment.ARG_TASK_ID, taskId) }
+    private fun openFocus(item: PlannedTask) {
+        val args = Bundle().apply {
+            putLong(FocusFragment.ARG_TASK_ID, item.task.id)
+            putInt(FocusFragment.ARG_PLANNED_DURATION_MINUTES, item.plannedMinutes)
+        }
         findNavController().navigate(R.id.focusFragment, args)
     }
 

@@ -15,6 +15,8 @@
     <color name="nav_unselected">#9CA3AF</color>
     <color name="completed_text">#9CA3AF</color>
 
+    <color name="plan_urgent_background">#FFF5F5</color>
+    <color name="plan_urgent_stroke">#FECACA</color>
     <color name="priority_high">#EF4444</color>
     <color name="priority_medium">#F97316</color>
     <color name="priority_low">#22C55E</color>

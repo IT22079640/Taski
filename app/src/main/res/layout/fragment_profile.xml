@@ -52,6 +52,44 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_lg"
+                    android:text="@string/profile_daily_work_title" />
+
+                <TextView
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text="@string/profile_daily_work_question" />
+
+                <TextView
+                    android:id="@+id/text_daily_work_value"
+                    style="@style/TextAppearance.Taski.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:textColor="@color/text_primary"
+                    tools:text="2 hours per day" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_daily_work_change"
+                    style="@style/Widget.Taski.Button.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:minHeight="@dimen/touch_target_min"
+                    android:text="@string/profile_daily_work_change" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginTop="@dimen/spacing_lg"
+                    android:layout_marginBottom="@dimen/spacing_md"
+                    android:background="@color/divider" />
+
+                <TextView
+                    style="@style/TextAppearance.Taski.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@string/profile_offline_title" />
 
                 <TextView

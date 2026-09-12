@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_plan_task"
     style="@style/Widget.Taski.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,40 +29,44 @@
                 android:layout_marginEnd="@dimen/spacing_sm"
                 android:layout_weight="1"
                 android:maxLines="3"
-                tools:text="Finish SE4041 lab report" />
+                tools:text="Complete Database Assignment" />
 
             <TextView
-                android:id="@+id/text_score"
+                android:id="@+id/text_urgent_badge"
                 style="@style/TextAppearance.Taski.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_priority_chip"
-                android:paddingStart="@dimen/spacing_md"
-                android:paddingTop="@dimen/spacing_xs"
-                android:paddingEnd="@dimen/spacing_md"
-                android:paddingBottom="@dimen/spacing_xs"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                tools:text="Score 86" />
+                android:text="@string/plan_urgent_label"
+                android:textColor="@color/priority_high"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/text_priority_level"
+            android:id="@+id/text_priority_score"
             style="@style/TextAppearance.Taski.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_sm"
             android:textStyle="bold"
-            tools:text="High priority"
+            tools:text="HIGH • 86/100"
             tools:textColor="@color/priority_high" />
+
+        <TextView
+            android:id="@+id/text_urgency"
+            style="@style/TextAppearance.Taski.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            tools:text="Due today" />
 
         <TextView
             android:id="@+id/text_deadline"
             style="@style/TextAppearance.Taski.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_sm"
-            tools:text="Deadline: 12 Sep 2026" />
+            android:layout_marginTop="@dimen/spacing_xs"
+            tools:text="Deadline: 12 Sep 2026, 6:00 PM" />
 
         <TextView
             android:id="@+id/text_effort"
@@ -69,15 +74,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xs"
-            tools:text="Effort: 2h" />
+            tools:text="Estimated effort: 45 min" />
 
         <TextView
-            android:id="@+id/text_importance"
-            style="@style/TextAppearance.Taski.Body"
+            android:id="@+id/text_planned_focus_label"
+            style="@style/TextAppearance.Taski.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:text="@string/plan_planned_focus_label"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_planned_focus"
+            style="@style/TextAppearance.Taski.Subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xs"
-            tools:text="Importance: High" />
+            android:textColor="@color/primary"
+            tools:text="45 minutes" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -4,6 +4,7 @@ import com.example.taski.data.entity.Importance
 import com.example.taski.data.entity.Task
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.TimeZone
@@ -15,15 +16,23 @@ class FocusPlanBuilderTest {
     private val dayMs = 86_400_000L
 
     @Test
+    fun defaultAvailableTime_isTwoHours() {
+        assertEquals(120, FocusPlanBuilder.DEFAULT_AVAILABLE_MINUTES)
+        assertEquals(120, DailyWorkCapacityStore.DEFAULT_MINUTES)
+    }
+
+    @Test
     fun noPendingTasks_returnsCaughtUpPlan() {
         val completed = task(id = 1, score = 90, effortMinutes = 60, completed = true)
         val plan = planOf(listOf(completed), availableMinutes = 120)
 
         assertTrue(plan.isCaughtUp)
+        assertFalse(plan.nothingFits)
         assertTrue(plan.selectedTasks.isEmpty())
         assertEquals(0, plan.taskCount)
         assertEquals(0, plan.totalPlannedMinutes)
         assertEquals(120, plan.availableMinutes)
+        assertEquals(0, plan.pendingCount)
     }
 
     @Test
@@ -57,9 +66,25 @@ class FocusPlanBuilderTest {
         assertEquals(30, plan.totalPlannedMinutes)
         assertFalse(plan.exceedsAvailableTime)
         assertEquals(1L, recommendation.recommendedTask?.id)
-        assertTrue(recommendation.whySummary.contains("high priority"))
+        assertTrue(recommendation.whySummary.contains("High priority"))
         assertTrue(recommendation.whySummary.contains("due today"))
-        assertTrue(recommendation.whySummary.contains("1-hour"))
+        assertTrue(recommendation.whySummary.contains("available focus time"))
+    }
+
+    @Test
+    fun exampleTwoHourPlan_prefersUrgentFittingTasksOverLargeLaterTask() {
+        val dueToday = task(id = 1, score = 85, effortMinutes = 60, deadline = now, title = "Task A")
+        val dueTomorrow = task(id = 2, score = 80, effortMinutes = 45, deadline = now + dayMs, title = "Task B")
+        val nextWeek = task(id = 3, score = 60, effortMinutes = 90, deadline = now + 7 * dayMs, title = "Task C")
+
+        val plan = planOf(listOf(nextWeek, dueTomorrow, dueToday), availableMinutes = 120)
+
+        assertEquals(listOf(1L, 2L), plan.selectedTasks.map { it.id })
+        assertEquals(listOf(60, 45), plan.items.map { it.plannedMinutes })
+        assertEquals(105, plan.totalPlannedMinutes)
+        assertEquals(15, plan.remainingMinutes)
+        assertEquals(3L, plan.nextOverflowTask?.id)
+        assertFalse(plan.exceedsAvailableTime)
     }
 
     @Test
@@ -72,6 +97,7 @@ class FocusPlanBuilderTest {
         assertEquals(listOf(1L), plan.selectedTasks.map { it.id })
         assertEquals(20, plan.totalPlannedMinutes)
         assertFalse(plan.exceedsAvailableTime)
+        assertEquals(2L, plan.nextOverflowTask?.id)
     }
 
     @Test
@@ -83,21 +109,26 @@ class FocusPlanBuilderTest {
 
         assertEquals(listOf(2L), plan.selectedTasks.map { it.id })
         assertFalse(plan.exceedsAvailableTime)
+        assertEquals(1L, plan.nextOverflowTask?.id)
     }
 
     @Test
-    fun noneFit_fallsBackToHighestPriorityPendingTask() {
+    fun noneFit_doesNotExceedDailyCapacity() {
         val highest = task(id = 1, score = 88, effortMinutes = 240)
         val next = task(id = 2, score = 70, effortMinutes = 180)
 
         val plan = planOf(listOf(next, highest), availableMinutes = 30)
         val recommendation = FocusRecommendationBuilder.from(plan, now, utc)
 
-        assertEquals(listOf(1L), plan.selectedTasks.map { it.id })
-        assertTrue(plan.exceedsAvailableTime)
-        assertEquals(FocusRecommendation.State.OVERFLOW, recommendation.state)
-        assertTrue(recommendation.whySummary.contains("No tasks fit within 30 minutes"))
-        assertTrue(recommendation.whySummary.contains("highest-priority pending task"))
+        assertTrue(plan.selectedTasks.isEmpty())
+        assertTrue(plan.nothingFits)
+        assertFalse(plan.exceedsAvailableTime)
+        assertEquals(0, plan.totalPlannedMinutes)
+        assertEquals(1L, plan.nextOverflowTask?.id)
+        assertEquals(FocusRecommendation.State.NOTHING_FITS, recommendation.state)
+        assertNull(recommendation.recommendedTask)
+        assertEquals(1L, recommendation.overflowTask?.id)
+        assertTrue(recommendation.whySummary.contains("No more tasks fit"))
     }
 
     @Test
@@ -111,6 +142,23 @@ class FocusPlanBuilderTest {
         assertEquals(listOf(2L), plan.selectedTasks.map { it.id })
         assertEquals(2L, recommendation.recommendedTask?.id)
         assertFalse(plan.selectedTasks.any { it.completed })
+        assertEquals(1, plan.pendingCount)
+    }
+
+    @Test
+    fun changingAvailableTimeFromTwoHoursToThreeHours_recalculatesPlan() {
+        val shortTask = task(id = 1, score = 80, effortMinutes = 30, deadline = now + 6 * dayMs)
+        val longTask = task(id = 2, score = 85, effortMinutes = 90, deadline = now + 6 * dayMs)
+        val extra = task(id = 3, score = 70, effortMinutes = 60, deadline = now + 6 * dayMs)
+        val tasks = listOf(shortTask, longTask, extra)
+
+        val twoHours = planOf(tasks, availableMinutes = 120)
+        val threeHours = planOf(tasks, availableMinutes = 180)
+
+        assertEquals(listOf(2L, 1L), twoHours.selectedTasks.map { it.id })
+        assertEquals(120, twoHours.totalPlannedMinutes)
+        assertEquals(listOf(2L, 1L, 3L), threeHours.selectedTasks.map { it.id })
+        assertEquals(180, threeHours.totalPlannedMinutes)
     }
 
     @Test
@@ -151,6 +199,7 @@ class FocusPlanBuilderTest {
 
         assertEquals(listOf(2L, 3L), plan.selectedTasks.map { it.id })
         assertEquals(105, plan.totalPlannedMinutes)
+        assertEquals(1L, plan.nextOverflowTask?.id)
     }
 
     @Test
@@ -164,6 +213,55 @@ class FocusPlanBuilderTest {
         assertEquals(listOf(1L, 2L), plan.selectedTasks.map { it.id })
         assertEquals(55, plan.totalPlannedMinutes)
         assertFalse(plan.exceedsAvailableTime)
+    }
+
+    @Test
+    fun highAiScore_ranksAheadOfLowerScoreWithSameUrgency() {
+        val highScore = task(id = 1, score = 92, effortMinutes = 30, deadline = now)
+        val lowerScore = task(id = 2, score = 71, effortMinutes = 30, deadline = now)
+
+        val plan = planOf(listOf(lowerScore, highScore), availableMinutes = 30)
+
+        assertEquals(listOf(1L), plan.selectedTasks.map { it.id })
+        assertEquals(2L, plan.nextOverflowTask?.id)
+    }
+
+    @Test
+    fun smallerEffort_isTieBreakerWhenUrgencyAndScoreMatch() {
+        val smaller = task(id = 1, score = 80, effortMinutes = 20, deadline = now)
+        val larger = task(id = 2, score = 80, effortMinutes = 40, deadline = now)
+
+        val plan = planOf(listOf(larger, smaller), availableMinutes = 60)
+
+        assertEquals(listOf(1L, 2L), plan.selectedTasks.map { it.id })
+    }
+
+    @Test
+    fun plannedFocusMinutes_matchPackedEffortAndNeverExceedRemaining() {
+        val first = task(id = 1, score = 90, effortMinutes = 50, deadline = now)
+        val second = task(id = 2, score = 80, effortMinutes = 40, deadline = now)
+
+        val plan = planOf(listOf(first, second), availableMinutes = 75)
+
+        assertEquals(listOf(50), plan.items.map { it.plannedMinutes })
+        assertEquals(50, plan.items[0].plannedMinutes)
+        assertEquals(50, plan.totalPlannedMinutes)
+        assertEquals(25, plan.remainingMinutes)
+        assertEquals(2L, plan.nextOverflowTask?.id)
+        assertTrue(plan.totalPlannedMinutes <= plan.availableMinutes)
+    }
+
+    @Test
+    fun recommendation_matchesFirstSelectedPlanTask() {
+        val first = task(id = 4, score = 88, effortMinutes = 45, deadline = now, title = "Database Assignment")
+        val second = task(id = 5, score = 70, effortMinutes = 30, deadline = now + dayMs)
+        val plan = planOf(listOf(second, first), availableMinutes = 120)
+        val recommendation = FocusRecommendationBuilder.from(plan, now, utc)
+
+        assertEquals(plan.items.first().task.id, recommendation.recommendedTask?.id)
+        assertEquals(plan.items.first().plannedMinutes, recommendation.plannedMinutes)
+        assertEquals(45, recommendation.plannedMinutes)
+        assertEquals("Database Assignment", recommendation.recommendedTask?.title)
     }
 
     @Test
@@ -224,11 +322,6 @@ class FocusPlanBuilderTest {
         val recommendation = FocusRecommendationBuilder.from(plan, now, utc)
 
         assertEquals(title, recommendation.recommendedTask?.title)
-    }
-
-    @Test
-    fun defaultAvailableTime_isOneHour() {
-        assertEquals(60, FocusPlanBuilder.DEFAULT_AVAILABLE_MINUTES)
     }
 
     private fun planOf(tasks: List<Task>, availableMinutes: Int) =
