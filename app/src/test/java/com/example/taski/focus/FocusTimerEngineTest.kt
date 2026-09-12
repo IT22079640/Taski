@@ -80,6 +80,60 @@ class FocusTimerEngineTest {
     }
 
     @Test
+    fun remainingAfterRestore_doesNotResetRunningPomodoroToFullDuration() {
+        val remainingAtSave = FocusTimerEngine.minutesToMillis(23) + 41_000L
+        val lastRealtime = 500_000L
+        val endRealtime = lastRealtime + remainingAtSave
+        val nowRealtime = lastRealtime + 2_000L
+
+        val remaining = FocusTimerEngine.remainingAfterRestore(
+            wasRunning = true,
+            remainingAtSave = remainingAtSave,
+            endRealtime = endRealtime,
+            nowRealtime = nowRealtime,
+            lastRealtime = lastRealtime
+        )
+
+        assertEquals(remainingAtSave - 2_000L, remaining)
+        assertEquals("23:39", FocusTimerEngine.formatCountdown(remaining))
+        assertTrue(remaining < FocusTimerEngine.DEFAULT_DURATION_MS)
+    }
+
+    @Test
+    fun remainingAfterRestore_continuesPlannedSessionWithoutResetting() {
+        val remainingAtSave = FocusTimerEngine.minutesToMillis(58) + 20_000L
+        val lastRealtime = 800_000L
+        val endRealtime = lastRealtime + remainingAtSave
+        val nowRealtime = lastRealtime + 1_000L
+
+        val remaining = FocusTimerEngine.remainingAfterRestore(
+            wasRunning = true,
+            remainingAtSave = remainingAtSave,
+            endRealtime = endRealtime,
+            nowRealtime = nowRealtime,
+            lastRealtime = lastRealtime
+        )
+
+        assertEquals(remainingAtSave - 1_000L, remaining)
+        assertEquals("58:19", FocusTimerEngine.formatCountdown(remaining))
+        assertTrue(remaining < FocusTimerEngine.plannedDurationMillis(60)!!)
+    }
+
+    @Test
+    fun remainingAfterRestore_keepsPausedPlannedTimeAcrossRecreation() {
+        val remainingAtSave = FocusTimerEngine.minutesToMillis(58) + 20_000L
+        val remaining = FocusTimerEngine.remainingAfterRestore(
+            wasRunning = false,
+            remainingAtSave = remainingAtSave,
+            endRealtime = 900_000L,
+            nowRealtime = 950_000L,
+            lastRealtime = 800_000L
+        )
+        assertEquals(remainingAtSave, remaining)
+        assertEquals("58:20", FocusTimerEngine.formatCountdown(remaining))
+    }
+
+    @Test
     fun remainingAfterRestore_handlesRealtimeReset() {
         val remaining = FocusTimerEngine.remainingAfterRestore(
             wasRunning = true,

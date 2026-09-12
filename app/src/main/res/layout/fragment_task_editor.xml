@@ -23,6 +23,7 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:fillViewport="true"
+        android:isScrollContainer="true"
         android:paddingStart="@dimen/screen_padding"
         android:paddingEnd="@dimen/screen_padding">
 
@@ -53,9 +54,11 @@
                             android:id="@+id/input_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="top"
                             android:imeOptions="actionNext"
-                            android:inputType="textCapSentences"
-                            android:maxLines="2" />
+                            android:inputType="textCapSentences|textMultiLine"
+                            android:minLines="1"
+                            android:maxLines="4" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout

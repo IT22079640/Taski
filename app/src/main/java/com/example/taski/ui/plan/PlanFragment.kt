@@ -54,6 +54,7 @@ class PlanFragment : Fragment() {
         val chipGroup = view.findViewById<ChipGroup>(R.id.chip_group_time)
         val chipCustom = view.findViewById<Chip>(R.id.chip_time_custom)
         val adjustGroup = view.findViewById<View>(R.id.group_adjust_time)
+        adjustGroup.isVisible = savedInstanceState?.getBoolean(STATE_ADJUST_VISIBLE) == true
         view.findViewById<MaterialButton>(R.id.btn_adjust_time).setOnClickListener {
             adjustGroup.isVisible = !adjustGroup.isVisible
         }
@@ -292,9 +293,20 @@ class PlanFragment : Fragment() {
         findNavController().navigate(R.id.focusFragment, args)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        view?.findViewById<View>(R.id.group_adjust_time)?.let { group ->
+            outState.putBoolean(STATE_ADJUST_VISIBLE, group.isVisible)
+        }
+    }
+
     private fun levelLabel(level: PriorityLevel): String = when (level) {
         PriorityLevel.HIGH -> getString(R.string.priority_level_high)
         PriorityLevel.MEDIUM -> getString(R.string.priority_level_medium)
         PriorityLevel.LOW -> getString(R.string.priority_level_low)
+    }
+
+    private companion object {
+        const val STATE_ADJUST_VISIBLE = "adjust_time_visible"
     }
 }

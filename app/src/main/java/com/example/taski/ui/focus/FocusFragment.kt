@@ -109,7 +109,7 @@ class FocusFragment : Fragment() {
         }
         view.findViewById<CircularProgressIndicator>(R.id.timer_progress).apply {
             max = FocusTimerEngine.PROGRESS_MAX
-            setProgressCompat(state.progress, true)
+            setProgressCompat(state.progress, false)
         }
 
         val startButton = view.findViewById<MaterialButton>(R.id.btn_start)

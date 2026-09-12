@@ -23,7 +23,9 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
-            delay(SPLASH_DELAY_MS)
+            if (savedInstanceState == null) {
+                delay(SPLASH_DELAY_MS)
+            }
             if (!isAdded) return@launch
             val navController = findNavController()
             if (navController.currentDestination?.id != R.id.splashFragment) return@launch

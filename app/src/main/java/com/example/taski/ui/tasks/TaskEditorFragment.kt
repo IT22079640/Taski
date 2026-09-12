@@ -87,7 +87,7 @@ class TaskEditorFragment : Fragment() {
             resources.getStringArray(R.array.task_importance_options)
         )
         inputImportance.setAdapter(importanceAdapter)
-        if (!isEditing) {
+        if (!isEditing && savedInstanceState == null) {
             inputImportance.setText(getString(R.string.importance_medium), false)
         }
 
@@ -170,6 +170,7 @@ class TaskEditorFragment : Fragment() {
             }
         }
 
+        reattachPickers(inputDeadline, inputTime)
         viewModel.load(taskId)
         if (isEditing) {
             viewModel.existingTask.observe(viewLifecycleOwner) { task ->
@@ -221,13 +222,7 @@ class TaskEditorFragment : Fragment() {
             )
             .build()
         picker.addOnPositiveButtonClickListener { utcMidnight ->
-            ensureDefaultTime()
-            selectedDeadlineMillis = DateUtils.combineUtcPickerDateWithLocalTime(
-                utcMidnight,
-                selectedHour ?: DateUtils.DEFAULT_DEADLINE_HOUR,
-                selectedMinute ?: DateUtils.DEFAULT_DEADLINE_MINUTE
-            )
-            bindDeadlineFields(inputDeadline, inputTime)
+            applySelectedDate(utcMidnight, inputDeadline, inputTime)
         }
         picker.show(parentFragmentManager, DATE_PICKER_TAG)
     }
@@ -246,19 +241,53 @@ class TaskEditorFragment : Fragment() {
             .setMinute(selectedMinute ?: DateUtils.DEFAULT_DEADLINE_MINUTE)
             .build()
         picker.addOnPositiveButtonClickListener {
-            selectedHour = picker.hour
-            selectedMinute = picker.minute
-            val dateMillis = selectedDeadlineMillis ?: DateUtils.utcMidnightToLocalStartOfDay(
-                MaterialDatePicker.todayInUtcMilliseconds()
-            )
-            selectedDeadlineMillis = DateUtils.withLocalTime(
-                dateMillis,
-                picker.hour,
-                picker.minute
-            )
-            bindDeadlineFields(inputDeadline, inputTime)
+            applySelectedTime(picker.hour, picker.minute, inputDeadline, inputTime)
         }
         picker.show(parentFragmentManager, TIME_PICKER_TAG)
+    }
+
+    private fun reattachPickers(
+        inputDeadline: TextInputEditText,
+        inputTime: TextInputEditText
+    ) {
+        @Suppress("UNCHECKED_CAST")
+        (parentFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? MaterialDatePicker<Long>)
+            ?.addOnPositiveButtonClickListener { utcMidnight ->
+                applySelectedDate(utcMidnight, inputDeadline, inputTime)
+            }
+        val timePicker = parentFragmentManager.findFragmentByTag(TIME_PICKER_TAG) as? MaterialTimePicker
+        timePicker?.addOnPositiveButtonClickListener {
+            applySelectedTime(timePicker.hour, timePicker.minute, inputDeadline, inputTime)
+        }
+    }
+
+    private fun applySelectedDate(
+        utcMidnight: Long,
+        inputDeadline: TextInputEditText,
+        inputTime: TextInputEditText
+    ) {
+        ensureDefaultTime()
+        selectedDeadlineMillis = DateUtils.combineUtcPickerDateWithLocalTime(
+            utcMidnight,
+            selectedHour ?: DateUtils.DEFAULT_DEADLINE_HOUR,
+            selectedMinute ?: DateUtils.DEFAULT_DEADLINE_MINUTE
+        )
+        bindDeadlineFields(inputDeadline, inputTime)
+    }
+
+    private fun applySelectedTime(
+        hour: Int,
+        minute: Int,
+        inputDeadline: TextInputEditText,
+        inputTime: TextInputEditText
+    ) {
+        selectedHour = hour
+        selectedMinute = minute
+        val dateMillis = selectedDeadlineMillis ?: DateUtils.utcMidnightToLocalStartOfDay(
+            MaterialDatePicker.todayInUtcMilliseconds()
+        )
+        selectedDeadlineMillis = DateUtils.withLocalTime(dateMillis, hour, minute)
+        bindDeadlineFields(inputDeadline, inputTime)
     }
 
     private fun ensureDefaultTime() {
