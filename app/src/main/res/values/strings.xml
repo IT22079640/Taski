@@ -37,7 +37,7 @@
     <string name="home_view_progress">View progress</string>
     <string name="home_quick_add">Quick Add Task</string>
     <string name="home_priority_meta">%1$s · %2$s · Score %3$d</string>
-    <string name="cd_home_open_task">Open task %1$s</string>
+    <string name="cd_home_open_task">Open task %1$s, priority score %2$d</string>
 
     <string name="tasks_title">Tasks</string>
     <string name="tasks_empty_title">No tasks yet</string>
@@ -51,7 +51,7 @@
     <string name="task_deadline_required">Deadline (required)</string>
     <string name="task_time">Time</string>
     <string name="task_time_required">Time (required)</string>
-    <string name="task_reminder_helper">Taski schedules a local reminder at this date and time.</string>
+    <string name="task_reminder_helper">Taski schedules local reminders before and at this deadline.</string>
     <string name="task_reminder_disabled_helper">Notifications are off, so Taski cannot show the reminder. Saving the task still works.</string>
     <string name="task_effort_required">Estimated effort in hours (required)</string>
     <string name="task_importance_required">Importance (required)</string>
@@ -67,6 +67,8 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="cd_delete_task">Delete task</string>
+    <string name="cd_delete_task_named">Delete task %1$s</string>
+    <string name="cd_task_row">%1$s, score %2$d, %3$s</string>
     <string name="cd_back">Back</string>
     <string name="details_title">Task Details</string>
     <string name="details_edit">Edit</string>
@@ -188,6 +190,8 @@
     <string name="focus_back_to_plan">Back to Plan</string>
     <string name="focus_go_to_tasks">Go to Tasks</string>
     <string name="cd_focus_timer">Focus countdown</string>
+    <string name="cd_focus_timer_state">Focus timer %1$s remaining, %2$s</string>
+    <string name="cd_focus_timer_remaining">Time remaining %1$s</string>
 
     <string name="progress_title">Progress</string>
     <string name="progress_insight_kicker">🧠 Taski Insight</string>
@@ -239,7 +243,7 @@
     <string name="profile_offline_title">Offline storage</string>
     <string name="profile_offline_body">Tasks, focus sessions, and progress stay on this phone. Taski does not use an account or cloud sync.</string>
     <string name="profile_reminders_title">Task reminders</string>
-    <string name="profile_reminders_body">When you save a task, Taski schedules a local notification for its deadline date and time. You can keep using Taski if notifications are turned off.</string>
+    <string name="profile_reminders_body">When you save a task, Taski schedules local reminders before the deadline, when it is due, and if it is already overdue. You can keep using Taski if notifications are turned off.</string>
     <string name="profile_reminders_disabled_body">Notifications are disabled on this device. Tasks still save, but deadline reminders cannot appear until notifications are allowed in system settings.</string>
     <string name="profile_about_title">About Taski</string>
     <string name="profile_about_body">Taski is an offline productivity app for university students and young professionals. Plan tasks, focus locally, and track progress — no account required.</string>
@@ -248,6 +252,7 @@
     <string name="cd_add_task">Add task</string>
     <string name="cd_empty_tasks">No tasks yet</string>
     <string name="cd_empty_plan">No planned tasks</string>
+    <string name="cd_plan_task">Planned task %1$s, priority score %2$d</string>
     <string name="cd_empty_progress">No progress yet</string>
 
     <string name="priority_result_title">AI Priority Result</string>
@@ -280,11 +285,15 @@
     <string name="priority_effort_value">Estimated effort: %1$s</string>
 
     <string name="notification_channel_name">Task Reminders</string>
-    <string name="notification_channel_description">Local reminders at each task\'s deadline date and time.</string>
-    <string name="notification_due_title">Taski reminder</string>
+    <string name="notification_channel_description">Local reminders for upcoming, due, and overdue task deadlines.</string>
+    <string name="notification_upcoming_title">Upcoming deadline</string>
+    <string name="notification_upcoming_body">%1$s is coming up soon.</string>
+    <string name="notification_due_title">Task due</string>
     <string name="notification_due_body">%1$s is due now.</string>
+    <string name="notification_overdue_title">Task overdue</string>
+    <string name="notification_overdue_body">%1$s is overdue.</string>
     <string name="notification_permission_title">Task reminders</string>
-    <string name="notification_permission_body">Taski can send a local reminder at each task deadline. Nothing is sent to the cloud, and you can keep using Taski if you choose not to allow notifications.</string>
+    <string name="notification_permission_body">Taski can send local reminders for upcoming, due, and overdue tasks. Nothing is sent to the cloud, and you can keep using Taski if you choose not to allow notifications.</string>
     <string name="notification_permission_allow">Allow</string>
     <string name="notification_permission_not_now">Not now</string>
 </resources>

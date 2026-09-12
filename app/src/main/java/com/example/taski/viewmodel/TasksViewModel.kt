@@ -14,6 +14,10 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
 
     val tasks: LiveData<List<Task>> = repository.observeAllByPriority().asLiveData()
 
+    fun refreshDisplayPriority() {
+        repository.refreshDisplayPriority()
+    }
+
     fun setCompleted(task: Task, completed: Boolean) {
         viewModelScope.launch {
             repository.setCompleted(task.id, completed)

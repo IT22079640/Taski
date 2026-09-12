@@ -52,7 +52,7 @@ class ReminderTaskStateIntegrationTest {
         val stored = requireNotNull(repository.getById(id))
 
         val plan = ReminderPlanner.plan(stored.deadline, now, stored.completed)
-        assertEquals(deadline, plan.triggerAt)
+        assertEquals(deadline, plan.dueAt)
         assertEquals(id, scheduler.scheduledTasks.single().id)
         assertEquals(deadline, scheduler.scheduledTasks.single().deadline)
         assertTrue(!stored.completed)
@@ -74,7 +74,7 @@ class ReminderTaskStateIntegrationTest {
         assertTrue(scheduler.cancelledIds.contains(id))
         assertEquals(newDeadline, scheduler.scheduledTasks.single().deadline)
         assertEquals(newDeadline, edited.deadline)
-        assertEquals(newDeadline, ReminderPlanner.plan(edited.deadline, now, false).triggerAt)
+        assertEquals(newDeadline, ReminderPlanner.plan(edited.deadline, now, false).dueAt)
         assertNotEquals(originalDeadline, edited.deadline)
     }
 
@@ -114,7 +114,8 @@ class ReminderTaskStateIntegrationTest {
 
         assertTrue(stored.completed)
         assertTrue(scheduler.cancelledIds.contains(id))
-        assertNull(ReminderPlanner.plan(stored.deadline, now, stored.completed).triggerAt)
+        val plan = ReminderPlanner.plan(stored.deadline, now, stored.completed)
+        assertFalse(plan.hasAlarms)
     }
 
     @Test
@@ -131,14 +132,16 @@ class ReminderTaskStateIntegrationTest {
     }
 
     @Test
-    fun pastDeadline_doesNotScheduleFutureAlarm() = runBlocking {
+    fun pastDeadline_schedulesOverdueHandling() = runBlocking {
         val now = System.currentTimeMillis()
         val deadline = now - ReminderPlanner.HOUR_MS
         val id = repository.insert(sampleTask(title = "Already late", deadline = deadline))
         val stored = requireNotNull(repository.getById(id))
 
-        assertNull(ReminderPlanner.plan(stored.deadline, now, stored.completed).triggerAt)
-        assertTrue(scheduler.scheduledTasks.none { it.id == id })
+        val plan = ReminderPlanner.plan(stored.deadline, now, stored.completed)
+        assertTrue(plan.overdueNow)
+        assertNull(plan.dueAt)
+        assertEquals(id, scheduler.scheduledTasks.single().id)
         assertEquals(id, stored.id)
     }
 
@@ -172,8 +175,8 @@ class ReminderTaskStateIntegrationTest {
 
         scheduler.rescheduleAll(repository.getIncomplete())
 
-        assertEquals(setOf(futureId), scheduler.scheduledTasks.map { it.id }.toSet())
-        assertTrue(scheduler.scheduledTasks.none { it.id == pastId || it.id == doneId })
+        assertEquals(setOf(futureId, pastId), scheduler.scheduledTasks.map { it.id }.toSet())
+        assertTrue(scheduler.scheduledTasks.none { it.id == doneId })
     }
 
     @Test

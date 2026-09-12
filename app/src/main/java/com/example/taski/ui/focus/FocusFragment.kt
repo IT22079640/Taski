@@ -110,7 +110,14 @@ class FocusFragment : Fragment() {
         view.findViewById<CircularProgressIndicator>(R.id.timer_progress).apply {
             max = FocusTimerEngine.PROGRESS_MAX
             setProgressCompat(state.progress, false)
+            contentDescription = getString(
+                R.string.cd_focus_timer_state,
+                state.remainingLabel,
+                statusLabel(state)
+            )
         }
+        view.findViewById<TextView>(R.id.text_countdown).contentDescription =
+            getString(R.string.cd_focus_timer_remaining, state.remainingLabel)
 
         val startButton = view.findViewById<MaterialButton>(R.id.btn_start)
         startButton.isEnabled = state.startEnabled

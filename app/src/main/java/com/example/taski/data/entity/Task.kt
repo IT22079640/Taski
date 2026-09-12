@@ -13,6 +13,7 @@ data class Task(
     val importance: Importance,
     val estimatedEffort: Int,
     val category: String,
+    /** Snapshot written on insert/update. Pending-task UI ranking uses a live recalculation. */
     val priorityScore: Int = 0,
     val completed: Boolean = false,
     val createdAt: Long = System.currentTimeMillis(),

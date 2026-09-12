@@ -108,6 +108,37 @@ class PriorityCalculatorTest {
     }
 
     @Test
+    fun urgencyRisesAsDeadlineApproaches() {
+        val far = calculator.calculate(daysFromNow(10), Importance.MEDIUM, 120, now)
+        val near = calculator.calculate(daysFromNow(10), Importance.MEDIUM, 120, now + 9 * 86_400_000L)
+        assertTrue(near.urgencyScore > far.urgencyScore)
+        assertTrue(near.score > far.score)
+        assertEquals(far.importanceScore, near.importanceScore)
+        assertEquals(far.effortScore, near.effortScore)
+    }
+
+    @Test
+    fun weightsRemainFortyFortyTwenty() {
+        assertEquals(0.40, PriorityCalculator.WEIGHT_URGENCY, 0.0)
+        assertEquals(0.40, PriorityCalculator.WEIGHT_IMPORTANCE, 0.0)
+        assertEquals(0.20, PriorityCalculator.WEIGHT_EFFORT, 0.0)
+    }
+
+    @Test
+    fun levelsUseExistingThresholds() {
+        assertEquals(70, PriorityCalculator.LEVEL_HIGH_MIN)
+        assertEquals(40, PriorityCalculator.LEVEL_MEDIUM_MIN)
+        assertEquals(
+            PriorityLevel.HIGH,
+            calculator.calculate(daysFromNow(0), Importance.HIGH, 120, now).priorityLevel
+        )
+        assertEquals(
+            PriorityLevel.LOW,
+            calculator.calculate(daysFromNow(30), Importance.LOW, 480, now).priorityLevel
+        )
+    }
+
+    @Test
     fun reasonsMatchActualFactors() {
         val result = calculator.calculate(
             deadlineMillis = daysFromNow(2),

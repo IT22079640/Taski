@@ -48,6 +48,11 @@ class TasksFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshDisplayPriority()
+    }
+
     private fun openDetails(taskId: Long) {
         val args = Bundle().apply { putLong(TaskDetailsFragment.ARG_TASK_ID, taskId) }
         findNavController().navigate(R.id.taskDetailsFragment, args)

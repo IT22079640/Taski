@@ -15,6 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.util.concurrent.atomic.AtomicLong
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
@@ -166,5 +167,63 @@ class TaskRepositoryIntegrationTest {
         val raised = requireNotNull(repository.getById(laterId))
         assertTrue(raised.priorityScore > later.priorityScore)
         assertEquals(urgent.priorityScore, raised.priorityScore)
+    }
+
+    @Test
+    fun pendingDisplayPriority_risesWithTimeWithoutRewritingSnapshot() = runBlocking {
+        val now = AtomicLong(System.currentTimeMillis())
+        val timedRepository = TaskRepository(
+            taskDao = db.taskDao(),
+            reminderScheduler = scheduler,
+            clock = { now.get() }
+        )
+        val id = timedRepository.insert(
+            sampleTask(
+                title = "Approaching report",
+                deadline = now.get() + 10 * DAY_MS,
+                importance = Importance.MEDIUM,
+                estimatedEffort = 120,
+                priorityScore = 0
+            )
+        )
+        val firstDisplayed = requireNotNull(timedRepository.getById(id))
+        val snapshot = requireNotNull(db.taskDao().getById(id)).priorityScore
+        assertEquals(snapshot, firstDisplayed.priorityScore)
+
+        now.addAndGet(9 * DAY_MS)
+        timedRepository.refreshDisplayPriority()
+        val laterDisplayed = requireNotNull(timedRepository.getById(id))
+        val stillSnapshot = requireNotNull(db.taskDao().getById(id)).priorityScore
+
+        assertEquals(snapshot, stillSnapshot)
+        assertTrue(laterDisplayed.priorityScore > firstDisplayed.priorityScore)
+        val explained = timedRepository.explainPriority(laterDisplayed)
+        assertEquals(explained.score, laterDisplayed.priorityScore)
+    }
+
+    @Test
+    fun completedTask_keepsSnapshotPriority() = runBlocking {
+        val now = AtomicLong(System.currentTimeMillis())
+        val timedRepository = TaskRepository(
+            taskDao = db.taskDao(),
+            reminderScheduler = scheduler,
+            clock = { now.get() }
+        )
+        val id = timedRepository.insert(
+            sampleTask(
+                title = "Done work",
+                deadline = now.get() + 10 * DAY_MS,
+                importance = Importance.MEDIUM,
+                estimatedEffort = 120
+            )
+        )
+        timedRepository.setCompleted(id, true)
+        val completedScore = requireNotNull(timedRepository.getById(id)).priorityScore
+        now.addAndGet(9 * DAY_MS)
+        timedRepository.refreshDisplayPriority()
+        val afterTimePassed = requireNotNull(timedRepository.getById(id))
+        assertTrue(afterTimePassed.completed)
+        assertEquals(completedScore, afterTimePassed.priorityScore)
+        assertEquals(completedScore, requireNotNull(db.taskDao().getById(id)).priorityScore)
     }
 }

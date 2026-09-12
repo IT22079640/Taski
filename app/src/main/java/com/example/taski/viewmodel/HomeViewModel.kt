@@ -57,6 +57,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }.asLiveData(viewModelScope.coroutineContext)
 
     fun refreshDayBounds() {
+        taskRepository.refreshDisplayPriority()
         todayRange.value = currentDayRange()
     }
 

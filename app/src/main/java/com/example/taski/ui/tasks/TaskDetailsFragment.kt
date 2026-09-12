@@ -107,10 +107,16 @@ class TaskDetailsFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshDisplayPriority()
+    }
+
     private fun bindDetails(view: View, state: TaskDetailsViewModel.UiState.Ready) {
         val task = state.task
         val priority = state.priority
-        val level = PriorityLevel.fromScore(task.priorityScore)
+        val score = priority.score
+        val level = priority.priorityLevel
         val completed = task.completed
 
         view.findViewById<TextView>(R.id.text_title).text = task.title
@@ -153,11 +159,11 @@ class TaskDetailsFragment : Fragment() {
         }
 
         val scoreView = view.findViewById<TextView>(R.id.text_ai_score)
-        scoreView.text = getString(R.string.details_ai_score, task.priorityScore)
+        scoreView.text = getString(R.string.details_ai_score, score)
         scoreView.setTextColor(ContextCompat.getColor(requireContext(), levelColor(level)))
         scoreView.contentDescription = getString(
             R.string.cd_priority_score,
-            task.priorityScore,
+            score,
             levelLabel(level)
         )
 

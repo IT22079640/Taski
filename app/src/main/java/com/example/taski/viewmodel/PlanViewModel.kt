@@ -37,6 +37,10 @@ class PlanViewModel(application: Application) : AndroidViewModel(application) {
         rebuild()
     }
 
+    fun refreshDisplayPriority() {
+        repository.refreshDisplayPriority()
+    }
+
     private fun rebuild() {
         val tasks = pendingTasks.value ?: return
         val available = currentAvailableMinutes()

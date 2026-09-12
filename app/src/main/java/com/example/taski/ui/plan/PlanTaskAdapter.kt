@@ -74,6 +74,11 @@ class PlanTaskAdapter(
             bindUrgentCard(urgent)
 
             itemView.setOnClickListener { onOpenTask(item) }
+            itemView.contentDescription = context.getString(
+                R.string.cd_plan_task,
+                task.title,
+                task.priorityScore
+            )
             buttonOpen.setOnClickListener { onOpenTask(item) }
             buttonStartFocus.setOnClickListener { onStartFocus(item) }
         }

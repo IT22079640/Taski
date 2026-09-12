@@ -113,7 +113,11 @@ class HomeFragment : Fragment() {
                 ImportanceLabels.toLabel(task.importance),
                 task.priorityScore
             )
-            row.contentDescription = getString(R.string.cd_home_open_task, task.title)
+            row.contentDescription = getString(
+                R.string.cd_home_open_task,
+                task.title,
+                task.priorityScore
+            )
             row.setOnClickListener { openTask(task.id) }
             container.addView(row)
         }

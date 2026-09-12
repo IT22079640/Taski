@@ -8,32 +8,50 @@ import android.os.Build
 import com.example.taski.data.entity.Task
 
 class AlarmTaskReminderScheduler(
-    context: Context
+    context: Context,
+    private val clock: () -> Long = { System.currentTimeMillis() },
+    private val overdueStore: OverdueNoticeStore = OverdueNoticeStore.from(context)
 ) : TaskReminderScheduler {
 
     private val appContext = context.applicationContext
     private val alarmManager = appContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     override fun schedule(task: Task) {
-        cancel(task.id)
-        if (task.id <= 0L || task.completed) return
-        val triggerAt = ReminderPlanner.triggerAt(
+        cancelAlarms(task.id)
+        if (task.id <= 0L || task.completed) {
+            overdueStore.clear(task.id)
+            return
+        }
+        val now = clock()
+        val plan = ReminderPlanner.plan(
             deadlineMillis = task.deadline,
-            nowMillis = System.currentTimeMillis(),
+            nowMillis = now,
             completed = false
-        ) ?: return
-        setAlarm(triggerAt, task.id, ReminderKind.DUE)
+        )
+        if (!plan.overdueNow) {
+            overdueStore.clear(task.id)
+        }
+        plan.upcomingAt?.let { setAlarm(it, task.id, ReminderKind.UPCOMING) }
+        plan.dueAt?.let { setAlarm(it, task.id, ReminderKind.DUE) }
+        if (plan.overdueNow && !overdueStore.wasNotified(task.id)) {
+            setAlarm(now, task.id, ReminderKind.OVERDUE)
+        }
     }
 
     override fun cancel(taskId: Long) {
-        if (taskId <= 0L) return
-        ReminderKind.entries.forEach { kind ->
-            alarmManager.cancel(pendingIntent(taskId, kind))
-        }
+        cancelAlarms(taskId)
+        overdueStore.clear(taskId)
     }
 
     override fun rescheduleAll(tasks: List<Task>) {
         tasks.forEach { schedule(it) }
+    }
+
+    private fun cancelAlarms(taskId: Long) {
+        if (taskId <= 0L) return
+        ReminderKind.entries.forEach { kind ->
+            alarmManager.cancel(pendingIntent(taskId, kind))
+        }
     }
 
     private fun setAlarm(triggerAtMillis: Long, taskId: Long, kind: ReminderKind) {

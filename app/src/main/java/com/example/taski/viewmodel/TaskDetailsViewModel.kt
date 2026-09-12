@@ -72,6 +72,10 @@ class TaskDetailsViewModel(
         }
     }
 
+    fun refreshDisplayPriority() {
+        taskRepository.refreshDisplayPriority()
+    }
+
     fun setCompleted(completed: Boolean) {
         if (taskId <= 0L) return
         viewModelScope.launch {

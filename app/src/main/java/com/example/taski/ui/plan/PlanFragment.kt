@@ -293,6 +293,11 @@ class PlanFragment : Fragment() {
         findNavController().navigate(R.id.focusFragment, args)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshDisplayPriority()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         view?.findViewById<View>(R.id.group_adjust_time)?.let { group ->

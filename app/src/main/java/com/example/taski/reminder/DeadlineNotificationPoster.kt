@@ -28,18 +28,22 @@ object DeadlineNotificationPoster {
         manager.createNotificationChannel(channel)
     }
 
-    fun show(context: Context, task: Task) {
+    fun show(
+        context: Context,
+        task: Task,
+        kind: ReminderKind = ReminderKind.DUE
+    ): Boolean {
         ensureChannel(context)
-        if (!NotificationPermissionHelper.canPostNotifications(context)) return
+        if (!NotificationPermissionHelper.canPostNotifications(context)) return false
 
-        val title = context.getString(R.string.notification_due_title)
-        val text = context.getString(R.string.notification_due_body, task.title)
+        val title = context.getString(titleRes(kind))
+        val text = context.getString(bodyRes(kind), task.title)
         val tapIntent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         val contentIntent = PendingIntent.getActivity(
             context,
-            ReminderIds.notificationId(task.id, ReminderKind.DUE),
+            ReminderIds.notificationId(task.id, kind),
             tapIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -54,13 +58,26 @@ object DeadlineNotificationPoster {
             .setContentIntent(contentIntent)
             .build()
 
-        try {
+        return try {
             NotificationManagerCompat.from(context).notify(
-                ReminderIds.notificationId(task.id, ReminderKind.DUE),
+                ReminderIds.notificationId(task.id, kind),
                 notification
             )
+            true
         } catch (_: SecurityException) {
-            // POST_NOTIFICATIONS denied on API 33+.
+            false
         }
+    }
+
+    private fun titleRes(kind: ReminderKind): Int = when (kind) {
+        ReminderKind.UPCOMING -> R.string.notification_upcoming_title
+        ReminderKind.DUE -> R.string.notification_due_title
+        ReminderKind.OVERDUE -> R.string.notification_overdue_title
+    }
+
+    private fun bodyRes(kind: ReminderKind): Int = when (kind) {
+        ReminderKind.UPCOMING -> R.string.notification_upcoming_body
+        ReminderKind.DUE -> R.string.notification_due_body
+        ReminderKind.OVERDUE -> R.string.notification_overdue_body
     }
 }

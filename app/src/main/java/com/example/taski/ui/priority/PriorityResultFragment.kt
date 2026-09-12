@@ -68,8 +68,8 @@ class PriorityResultFragment : Fragment() {
         priority: PriorityResult,
         explanation: PriorityExplanation
     ) {
-        val score = task.priorityScore
-        val level = PriorityLevel.fromScore(score)
+        val score = priority.score
+        val level = priority.priorityLevel
 
         view.findViewById<TextView>(R.id.text_task_title).text = task.title
         view.findViewById<TextView>(R.id.text_score).text = score.toString()

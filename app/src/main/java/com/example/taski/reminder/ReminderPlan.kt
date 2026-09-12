@@ -1,7 +1,9 @@
 package com.example.taski.reminder
 
 data class ReminderPlan(
-    val triggerAt: Long?
+    val upcomingAt: Long? = null,
+    val dueAt: Long? = null,
+    val overdueNow: Boolean = false
 ) {
-    val hasAlarms: Boolean get() = triggerAt != null
+    val hasAlarms: Boolean get() = upcomingAt != null || dueAt != null || overdueNow
 }

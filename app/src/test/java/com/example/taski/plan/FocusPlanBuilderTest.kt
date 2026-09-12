@@ -313,6 +313,14 @@ class FocusPlanBuilderTest {
     }
 
     @Test
+    fun currentPriorityScore_breaksTiesWhenUrgencyMatches() {
+        val lowerCurrent = task(id = 1, score = 40, effortMinutes = 30, deadline = now + 5 * dayMs)
+        val higherCurrent = task(id = 2, score = 88, effortMinutes = 30, deadline = now + 5 * dayMs)
+        val plan = planOf(listOf(lowerCurrent, higherCurrent), availableMinutes = 30)
+        assertEquals(listOf(2L), plan.selectedTasks.map { it.id })
+    }
+
+    @Test
     fun longTitle_isStillRecommendedWhenItFits() {
         val title = "Prepare the complete database assignment write-up including diagrams and citations"
         val longTitle = task(id = 1, score = 82, effortMinutes = 25, deadline = now, title = title)

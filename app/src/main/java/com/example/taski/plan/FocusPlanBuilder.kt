@@ -5,8 +5,9 @@ import com.example.taski.progress.LocalDates
 import java.util.TimeZone
 
 /**
- * Builds today's focus plan from stored Room fields only.
- * Does not recalculate or write priority scores.
+ * Builds today's focus plan from stored Room fields plus the current
+ * display priority supplied by the repository.
+ * Does not write priority scores.
  *
  * Ranking (deterministic):
  * 1. Pending tasks only

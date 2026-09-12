@@ -60,7 +60,15 @@ class TaskAdapter(
                     if (task.completed) R.color.completed_text else importanceColor(task.importance)
                 )
             )
-            textScore.text = context.getString(R.string.task_score, task.priorityScore)
+            textScore.contentDescription = context.getString(
+                R.string.cd_priority_score,
+                task.priorityScore,
+                if (task.completed) {
+                    context.getString(R.string.task_completed_label)
+                } else {
+                    context.getString(R.string.details_status_pending)
+                }
+            )
 
             val strike = if (task.completed) {
                 textTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -87,6 +95,7 @@ class TaskAdapter(
             }
 
             itemView.setOnClickListener { onTaskClick(task) }
+            buttonDelete.contentDescription = context.getString(R.string.cd_delete_task_named, task.title)
             buttonDelete.setOnClickListener { onDelete(task) }
         }
     }
