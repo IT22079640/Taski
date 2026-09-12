@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:padding="@dimen/screen_padding"
+    tools:context=".ui.plan.PlanFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/plan_title"
+                style="@style/TextAppearance.Taski.ScreenTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/plan_title" />
+
+            <TextView
+                android:id="@+id/text_available_today"
+                style="@style/TextAppearance.Taski.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm"
+                android:textColor="@color/text_primary"
+                tools:text="Your available time today: 2 hours" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_md"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_plan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:paddingBottom="@dimen/spacing_lg"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_plan_task" />
+
+            <LinearLayout
+                android:id="@+id/plan_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xl"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <FrameLayout
+                    android:layout_width="@dimen/empty_icon_container"
+                    android:layout_height="@dimen/empty_icon_container"
+                    android:background="@drawable/bg_icon_soft">
+
+                    <ImageView
+                        android:layout_width="@dimen/empty_icon_size"
+                        android:layout_height="@dimen/empty_icon_size"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/cd_empty_plan"
+                        android:src="@drawable/ic_nav_plan"
+                        app:tint="@color/primary" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/text_empty_title"
+                    style="@style/TextAppearance.Taski.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg"
+                    android:gravity="center"
+                    android:text="@string/plan_caught_up_title" />
+
+                <TextView
+                    android:id="@+id/text_empty_body"
+                    style="@style/TextAppearance.Taski.Body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:gravity="center"
+                    android:text="@string/plan_caught_up_body" />
+            </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_recommendation"
+                style="@style/Widget.Taski.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:visibility="gone"
+                app:strokeColor="@color/primary"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_recommend_kicker"
+                        style="@style/TextAppearance.Taski.Subtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/plan_recommend_kicker"
+                        android:textColor="@color/primary" />
+
+                    <LinearLayout
+                        android:id="@+id/group_recommend_task"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/text_recommend_overflow"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:text="@string/plan_recommend_overflow"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:id="@+id/group_recommend_selected"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/text_recommend_start_with"
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:text="@string/plan_recommend_start_with"
+                            android:textAllCaps="true" />
+
+                        <TextView
+                            android:id="@+id/text_recommend_title"
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:textColor="@color/text_primary"
+                            tools:text="Database Assignment" />
+
+                        <TextView
+                            android:id="@+id/text_recommend_priority"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/text_primary"
+                            tools:text="High priority · Score 85" />
+
+                        <TextView
+                            android:id="@+id/text_recommend_deadline"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            tools:text="Deadline: 11 Sep 2026" />
+
+                        <TextView
+                            android:id="@+id/text_recommend_effort"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            tools:text="Estimated effort: 30m" />
+
+                        <TextView
+                            android:id="@+id/text_recommend_urgency"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            tools:text="Due today" />
+
+                        <TextView
+                            android:id="@+id/text_recommend_planned"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textColor="@color/primary"
+                            tools:text="Planned focus: 30 minutes" />
+
+                        <TextView
+                            android:id="@+id/text_recommend_why_label"
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:text="@string/plan_recommend_why"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/text_recommend_why"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            tools:text="Due tomorrow • High importance • 2h estimated effort" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_recommend_start_focus"
+                            style="@style/Widget.Taski.Button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:minHeight="@dimen/button_height"
+                            android:text="@string/plan_start_focus" />
+
+                        <TextView
+                            android:id="@+id/text_recommend_order_title"
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_lg"
+                            android:text="@string/plan_recommend_order" />
+
+                        <LinearLayout
+                            android:id="@+id/container_recommend_order"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:orientation="vertical" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/group_next_recommended"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_lg"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                style="@style/TextAppearance.Taski.Subtitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/plan_next_recommended" />
+
+                            <TextView
+                                android:id="@+id/text_next_recommended_title"
+                                style="@style/TextAppearance.Taski.Body"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_xs"
+                                android:textColor="@color/text_primary"
+                                tools:text="Write literature review" />
+
+                            <TextView
+                                style="@style/TextAppearance.Taski.Caption"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_xs"
+                                android:text="@string/plan_next_recommended_note" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/group_recommend_caught_up"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:text="@string/plan_caught_up_title" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:text="@string/plan_caught_up_body" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_summary"
+                style="@style/Widget.Taski.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_xs">
+
+                            <TextView
+                                android:id="@+id/text_summary_tasks"
+                                style="@style/TextAppearance.Taski.Stat"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/primary"
+                                tools:text="3" />
+
+                            <TextView
+                                style="@style/TextAppearance.Taski.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_xs"
+                                android:gravity="center"
+                                android:text="@string/plan_summary_tasks_label" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_xs">
+
+                            <TextView
+                                android:id="@+id/text_summary_planned"
+                                style="@style/TextAppearance.Taski.Stat"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/primary"
+                                tools:text="3h" />
+
+                            <TextView
+                                style="@style/TextAppearance.Taski.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_xs"
+                                android:gravity="center"
+                                android:text="@string/plan_summary_planned_label" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_xs">
+
+                            <TextView
+                                android:id="@+id/text_summary_available"
+                                style="@style/TextAppearance.Taski.Stat"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/accent"
+                                tools:text="4h" />
+
+                            <TextView
+                                style="@style/TextAppearance.Taski.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_xs"
+                                android:gravity="center"
+                                android:text="@string/plan_summary_available_label" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/text_overflow_note"
+                        style="@style/TextAppearance.Taski.Caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_md"
+                        android:text="@string/plan_overflow_note"
+                        android:textColor="@color/priority_medium"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_available_time"
+                style="@style/Widget.Taski.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_adjust_time"
+                        style="@style/Widget.Taski.Button.Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/touch_target_min"
+                        android:text="@string/plan_available_time_label" />
+
+                    <LinearLayout
+                        android:id="@+id/group_adjust_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chip_group_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            app:chipSpacingHorizontal="@dimen/spacing_sm"
+                            app:chipSpacingVertical="@dimen/spacing_sm"
+                            app:selectionRequired="true"
+                            app:singleSelection="true">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip_time_30m"
+                                style="@style/Widget.Taski.Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="@dimen/chip_min_height"
+                                android:text="@string/plan_time_30m" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip_time_1h"
+                                style="@style/Widget.Taski.Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="@dimen/chip_min_height"
+                                android:text="@string/plan_time_1h" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip_time_2h"
+                                style="@style/Widget.Taski.Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:minHeight="@dimen/chip_min_height"
+                                android:text="@string/plan_time_2h" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip_time_3h"
+                                style="@style/Widget.Taski.Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="@dimen/chip_min_height"
+                                android:text="@string/plan_time_3h" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip_time_4h"
+                                style="@style/Widget.Taski.Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="@dimen/chip_min_height"
+                                android:text="@string/plan_time_4h" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip_time_custom"
+                                style="@style/Widget.Taski.Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="@dimen/chip_min_height"
+                                android:text="@string/plan_time_custom" />
+                        </com.google.android.material.chip.ChipGroup>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_generate_plan"
+                            style="@style/Widget.Taski.Button.Outlined"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:minHeight="@dimen/button_height"
+                            android:text="@string/plan_generate" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/plan_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/plan_loading"
+            android:indeterminate="true"
+            app:indicatorColor="@color/primary" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context=".ui.tasks.TaskDetailsFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/details_toolbar"
+        style="@style/Widget.Taski.Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/task_details_menu"
+        app:navigationContentDescription="@string/cd_back"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/details_title" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/details_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/details_loading"
+                android:indeterminate="true"
+                app:indicatorColor="@color/primary" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/details_not_found"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/screen_padding"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/TextAppearance.Taski.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/details_not_found_title" />
+
+            <TextView
+                style="@style/TextAppearance.Taski.Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm"
+                android:gravity="center"
+                android:text="@string/details_not_found_body" />
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/details_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:paddingStart="@dimen/screen_padding"
+            android:paddingEnd="@dimen/screen_padding"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/spacing_lg">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_priority_update"
+                    style="@style/Widget.Taski.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_lg"
+                    android:visibility="gone"
+                    app:strokeColor="@color/primary"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/details_ai_brand"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:text="@string/details_priority_updated"
+                            android:textColor="@color/primary" />
+
+                        <TextView
+                            android:id="@+id/text_priority_update_level"
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:visibility="gone"
+                            tools:text="Medium → High"
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/text_priority_update_score"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textColor="@color/text_primary"
+                            tools:text="54 → 82" />
+
+                        <TextView
+                            android:id="@+id/text_priority_update_body"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            tools:text="Your priority increased because the deadline is closer." />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_priority_update_dismiss"
+                            style="@style/Widget.Taski.Button.Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:text="@string/details_priority_updated_got_it" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/spacing_md"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.Taski.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/text_status"
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_priority_chip"
+                            android:paddingStart="@dimen/spacing_md"
+                            android:paddingTop="@dimen/spacing_xs"
+                            android:paddingEnd="@dimen/spacing_md"
+                            android:paddingBottom="@dimen/spacing_xs"
+                            tools:text="Pending" />
+
+                        <TextView
+                            android:id="@+id/text_title"
+                            style="@style/TextAppearance.Taski.ScreenTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            tools:text="HCI Project Presentation Draft" />
+
+                        <TextView
+                            android:id="@+id/text_description"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            tools:text="Optional notes for this task" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.Taski.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/text_deadline"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            tools:text="Deadline: 12 Sep 2026" />
+
+                        <TextView
+                            android:id="@+id/text_importance"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/text_primary"
+                            tools:text="Importance: High" />
+
+                        <TextView
+                            android:id="@+id/text_effort"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/text_primary"
+                            tools:text="Estimated effort: 2h" />
+
+                        <TextView
+                            android:id="@+id/text_category"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/text_primary"
+                            tools:text="Category: Project" />
+
+                        <TextView
+                            android:id="@+id/text_created"
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            tools:text="Created 10 Sep 2026" />
+
+                        <TextView
+                            android:id="@+id/text_completed_at"
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:visibility="gone"
+                            tools:text="Completed 10 Sep 2026"
+                            tools:visibility="visible" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.Taski.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/details_ai_brand"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:text="@string/details_ai_title" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:text="@string/details_ai_caption" />
+
+                        <TextView
+                            android:id="@+id/text_ai_score"
+                            style="@style/TextAppearance.Taski.Display"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:textColor="@color/primary"
+                            tools:text="86 / 100" />
+
+                        <TextView
+                            android:id="@+id/text_ai_level"
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textAllCaps="true"
+                            tools:text="HIGH PRIORITY"
+                            tools:textColor="@color/priority_high" />
+
+                        <TextView
+                            android:id="@+id/label_urgency"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_lg"
+                            android:textColor="@color/text_primary" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/bar_urgency"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            app:indicatorColor="@color/primary"
+                            app:trackColor="@color/outline"
+                            app:trackCornerRadius="@dimen/progress_track_radius"
+                            app:trackThickness="@dimen/progress_track_thickness" />
+
+                        <TextView
+                            android:id="@+id/value_urgency"
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs" />
+
+                        <TextView
+                            android:id="@+id/label_importance_factor"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_lg"
+                            android:textColor="@color/text_primary" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/bar_importance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            app:indicatorColor="@color/primary"
+                            app:trackColor="@color/outline"
+                            app:trackCornerRadius="@dimen/progress_track_radius"
+                            app:trackThickness="@dimen/progress_track_thickness" />
+
+                        <TextView
+                            android:id="@+id/value_importance"
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs" />
+
+                        <TextView
+                            android:id="@+id/label_effort_factor"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_lg"
+                            android:textColor="@color/text_primary" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/bar_effort"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            app:indicatorColor="@color/accent"
+                            app:trackColor="@color/outline"
+                            app:trackCornerRadius="@dimen/progress_track_radius"
+                            app:trackThickness="@dimen/progress_track_thickness" />
+
+                        <TextView
+                            android:id="@+id/value_effort"
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xl"
+                            android:text="@string/priority_reasons_title" />
+
+                        <LinearLayout
+                            android:id="@+id/container_reasons"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:orientation="vertical" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xl"
+                            android:text="@string/details_why_title" />
+
+                        <TextView
+                            android:id="@+id/text_ai_why"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/text_primary"
+                            tools:text="This task is highly prioritized because its deadline is approaching." />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xl"
+                            android:text="@string/details_ai_recommendation" />
+
+                        <TextView
+                            android:id="@+id/text_ai_recommendation_title"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold"
+                            tools:text="Start this task today." />
+
+                        <TextView
+                            android:id="@+id/text_ai_recommendation_body"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            tools:text="Its deadline and importance make it a higher priority than your other pending tasks." />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_breakdown"
+                    style="@style/Widget.Taski.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/details_ai_brand"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:text="@string/details_breakdown_title" />
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:text="@string/details_breakdown_intro" />
+
+                        <LinearLayout
+                            android:id="@+id/container_breakdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.Taski.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.Taski.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/details_focus_title" />
+
+                        <TextView
+                            android:id="@+id/text_focus_empty"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:text="@string/details_focus_empty" />
+
+                        <TextView
+                            android:id="@+id/text_focus_time"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:textColor="@color/text_primary"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/text_focus_count"
+                            style="@style/TextAppearance.Taski.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textColor="@color/text_primary"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_start_focus"
+                            style="@style/Widget.Taski.Button.Outlined"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:minHeight="@dimen/button_height"
+                            android:text="@string/details_start_focus" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_edit"
+                    style="@style/Widget.Taski.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xl"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/details_edit" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_complete"
+                    style="@style/Widget.Taski.Button.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/task_complete" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
+</LinearLayout>

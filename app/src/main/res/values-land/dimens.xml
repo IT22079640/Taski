@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="onboarding_panel_height">88dp</dimen>
-    <dimen name="onboarding_art_size">56dp</dimen>
-    <dimen name="logo_splash_size">140dp</dimen>
-    <dimen name="focus_timer_ring">128dp</dimen>
-    <dimen name="text_timer">40sp</dimen>
+    <dimen name="onboarding_art_size">96dp</dimen>
+    <dimen name="logo_splash_size">160dp</dimen>
+    <dimen name="focus_timer_ring">148dp</dimen>
+    <dimen name="text_timer">44sp</dimen>
+    <dimen name="score_circle_size">96dp</dimen>
+    <dimen name="empty_icon_size">32dp</dimen>
+    <dimen name="empty_icon_container">48dp</dimen>
+    <dimen name="text_stat">22sp</dimen>
 </resources>
